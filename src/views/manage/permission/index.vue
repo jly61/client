@@ -1,0 +1,15 @@
+<template>
+    <div class="permission">
+
+    </div>
+</template>
+
+<script>
+  export default {
+    name: 'Permission'
+  }
+</script>
+
+<style scoped>
+
+</style>

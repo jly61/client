@@ -22,7 +22,7 @@ describe('Utils:formatTime', () => {
   it('more than one day', () => {
     expect(formatTime(d)).toBe('7月13日17时54分')
   })
-  it('format', () => {
+  it('util.js', () => {
     expect(formatTime(d, '{y}-{m}-{d} {h}:{i}')).toBe('2018-07-13 17:54')
     expect(formatTime(d, '{y}-{m}-{d}')).toBe('2018-07-13')
     expect(formatTime(d, '{y}/{m}/{d} {h}-{i}')).toBe('2018/07/13 17-54')

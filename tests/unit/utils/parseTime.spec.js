@@ -11,7 +11,7 @@ describe('Utils:parseTime', () => {
   it('new Date', () => {
     expect(parseTime(new Date(d))).toBe('2018-07-13 17:54:01')
   })
-  it('format', () => {
+  it('util.js', () => {
     expect(parseTime(d, '{y}-{m}-{d} {h}:{i}')).toBe('2018-07-13 17:54')
     expect(parseTime(d, '{y}-{m}-{d}')).toBe('2018-07-13')
     expect(parseTime(d, '{y}/{m}/{d} {h}-{i}')).toBe('2018/07/13 17-54')
