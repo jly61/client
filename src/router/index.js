@@ -35,12 +35,24 @@ export const constantRoutes = [
     {
         path: '/2d',
         component: Layout,
+        redirect: '/2d/temphour',
+        name: '2d',
+        meta: {
+            title: '二维',
+            icon: 'nested'
+        },
         children: [
             {
                 path: '/2d',
                 name: 'tempHour',
                 component: () => import('@/views/2d/temphour'),
                 meta: { title: '二维插值', icon: 'form' }
+            },
+            {
+                path: '/arcgis',
+                name: 'arcgis',
+                component: () => import('@/views/2d/arcgis'),
+                meta: { title: 'ArcGIS二维插值', icon: 'form' }
             }
         ]
     },

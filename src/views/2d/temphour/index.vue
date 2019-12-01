@@ -50,7 +50,7 @@
                     this.hourList.push(i)
                 }
                 // 初始化获取天气
-                this.initMap(6, 27, this.hour)
+                this.initMap(6, 27, 10)
             })
         },
         components: {
@@ -5071,6 +5071,7 @@
                             const letiogram = kriging.train(values, lngs, lats,
                                 params.krigingModel, params.krigingSigma2, params.krigingAlpha)
                             const ex = clipgeom.getExtent()
+                            console.log(ex)
                             const grid = kriging.grid(coord, letiogram, (ex[2] - ex[0]) / 200)
                             // 移除已有图层
                             if (canvasLayer !== null) {
@@ -5103,6 +5104,7 @@
                     }
                     // 首次加载，自动渲染一次差值图
                     const extent = clipgeom.getExtent()
+                    console.log(extent)
                     drawKriging(extent)
                 })
             }

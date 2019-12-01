@@ -3,7 +3,7 @@
     position: absolute;
     bottom: 10px;
     left:  calc(20% - 218px);
-    /*background: white;*/
+    background: white;
     z-index: 99;
 }
 
@@ -36,7 +36,9 @@
     width: 4.18%;
     height: 100%;
 }
-
+.hour a:hover {
+    color: #ff4400;
+}
 .hour a:before {
     content: '';
     position: absolute;
