@@ -2,7 +2,7 @@
     <div style="background: transparent;!important;" class="map">
         <div id="viewDiv"></div>
         <!--时间轴-->
-        <date-picker class="date-picker" v-on:listenChild="showChild"></date-picker>
+        <date-select class="date-picker" :pickerType="1" v-on:sendDate="showChild"></date-select>
         <div class="time">
             <div class="hour">
                 <a href="#" v-for="(item, index) in hourList" v-if="item < 10"
@@ -17,16 +17,19 @@
     import esriLoader from 'esri-loader'
     import axios from 'axios'
     import '@/styles/hour.css'
-    import DatePicker from '@/components/Datepicker'
+    import DateSelect from '@/components/Dateselect'
+    import {formatDate} from '@/utils/util'
 
     export default {
         name: '',
         data() {
             return {
-                month: new Date().getMonth() + 1,
-                day: new Date().getDate(),
-                hourList: [],
-                hourFlag: new Date().getHours()
+                year: 2019,
+                month: 6,
+                day: 27,
+                hour: new Date().getHours(),
+                hourFlag: this.hour,
+                hourList: []
             }
         },
         mounted() {
@@ -35,19 +38,20 @@
                     this.hourList.push(i)
                 }
                 // 初始化获取天气
-                this.getWeather(6, 27, this.hourFlag)
+                this.getWeather(6, 27, this.hour)
             })
         },
         components: {
-            DatePicker
+            DateSelect
         },
         computed: {},
 
         methods: {
-            showChild(data) {
-                console.log(data)
-                this.month = data.month
-                this.day = data.day
+            showChild(date) {
+                date = formatDate(date)
+                this.year = date.year
+                this.month = date.month
+                this.day = date.day
                 this.getWeather(this.month, this.day, new Date().getHours())
             },
             getWeather(month, day, hour) {

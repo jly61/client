@@ -3,42 +3,39 @@
     <div style="background: transparent;!important;">
         <div id="viewDiv"></div>
         <!--时间轴-->
-        <date-picker class="date-picker" v-on:listenChild="showChild"></date-picker>
+        <date-select class="date-picker" :pickerType="1"  v-on:sendDate="showChild"></date-select>
     </div>
 </template>
 <script>
     import esriLoader from "esri-loader";
     import axios from 'axios';
-    import '@/styles/hour.css';
-    import DatePicker from '@/components/Datepicker';
+    import DateSelect from '@/components/Dateselect'
+    import {formatDate} from '@/utils/util'
 
     export default {
         name: "DayRain",
         data() {
             return {
-                month: new Date().getMonth() + 1,
-                day: new Date().getDate(),
+                month: 6,
+                day: 27
             };
         },
-        mounted() {
-            this.getWeather();
-            this.$nextTick(() => {
-                // 初始化获取天气
-            })
-        },
         components: {
-            DatePicker
+            DateSelect
         },
-        computed: {},
+        mounted() {
+            this.getWeather(this.month, this.day);
+        },
 
         methods: {
-            showChild(data) {
-                console.log(data);
-                this.month = data.month;
-                this.day = data.day;
-                this.getWeather();
+            showChild(date) {
+                date = formatDate(date)
+                this.year = date.year
+                this.month = date.month
+                this.day = date.day
+                this.getWeather(this.month, this.day);
             },
-            getWeather() {
+            getWeather(month, day) {
                 const options = {
                     // 可以使用自定义资源加载,arcgis 官网加载太慢了,经常加载失败.后面会讲到自己本地如何配置资源
                     url: 'https://js.arcgis.com/4.12/'
@@ -113,8 +110,8 @@
 
                         let graphics = [];
                         let param = {
-                            month: this.month,
-                            day: this.day,
+                            month: month,
+                            day: day,
                         };
                         console.log(this.month, this.day);
                         let _this = this;
@@ -206,5 +203,12 @@
         padding: 0;
         width: 100%;
         height: calc(100vh - 50px);
+    }
+    .date-picker {
+        position: absolute;
+        bottom: 10px;
+        left:  calc(20% - 218px);
+        background: white;
+        z-index: 99;
     }
 </style>

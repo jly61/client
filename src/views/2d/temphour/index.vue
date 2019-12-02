@@ -50,7 +50,7 @@
                     this.hourList.push(i)
                 }
                 // 初始化获取天气
-                this.initMap(6, 27, 10)
+                this.initMap(6, 27, this.hour)
             })
         },
         components: {
