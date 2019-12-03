@@ -5014,13 +5014,14 @@ export default {
     },
     initMap() {
       this.map = L.map('map', {
-        center: [29.65953686, 102.8696333],
-        zoom: 7,
+        center: [38.65953686, 120.8696333],
+        zoom: 9
       })
-      const url = "http://webrd0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8";
+      const url = 'http://webrd0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8'
       new L.TileLayer(url, {
-        subdomains:"1234"
+        subdomains: '1234'
       }).addTo(this.map)
+
       // L.esri.tiledMapLayer({
       //   url: 'http://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'
       // }).addTo(this.map)
@@ -5034,6 +5035,7 @@ export default {
     },
     drawCanvas(month, day, hour) {
       this.hourFlag = hour
+      console.log(hour, this.hourFlag)
       const xlim = [97.3481, 108.5467]
       const ylim = [26.0459, 34.3129]
       const param = {
@@ -5045,6 +5047,7 @@ export default {
       const _this = this
       axios.get('http://localhost:3000/weathers/kri-hour', { params: param }).then(res => {
         this.points = res.data.result
+
         function loadkriging() {
           const canvas = document.getElementById('canvasMap')
           canvas.width = 1000
@@ -5054,7 +5057,7 @@ export default {
           const x = []
           const y = []
           for (let i = 0; i < n; i++) {
-            t.push(parseFloat(_this.points[i].TEM))
+            t.push(parseFloat(_this.points[i].PRE_1h))
             x.push(parseFloat(_this.points[i].docs[0].lon)) // lon
             y.push(parseFloat(_this.points[i].docs[0].lat)) // lat
             L.circle([y[i], x[i]], { radius: 1 }).addTo(_this.map)
@@ -5069,7 +5072,6 @@ export default {
 
         function returnImgae() {
           const mycanvas = document.getElementById('canvasMap')
-          console.log(mycanvas.toDataURL('image/png'))
           return mycanvas.toDataURL('image/png')
         }
 

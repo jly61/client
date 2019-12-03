@@ -1,13 +1,11 @@
 <template>
-    <div class="user-manage">
-
-    </div>
+  <div class="user-manage" />
 </template>
 
 <script>
-  export default {
-    name: 'User'
-  }
+export default {
+  name: 'User'
+}
 </script>
 
 <style lang="stylus" scoped>
