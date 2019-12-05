@@ -5137,7 +5137,7 @@
                   };
                   var screen_righttop = _this.view.toScreen(righttop);
                   canvas.getContext("2d").drawImage(image, screenPoint.x,screenPoint.y,Math.abs(screen_righttop.x-screen_leftbottom.x),Math.abs(screen_righttop.y-screen_leftbottom.y));
-                  console.log(canvas.toDataURL("image/png"))
+                  // console.log(canvas.toDataURL("image/png"))
                   return canvas.toDataURL("image/png");
                 }
               });
@@ -5149,7 +5149,7 @@
                 });
                 ImageOverlayLayer.opacity = 0.8
                 _this.map.add(ImageOverlayLayer);
-                console.log(_this.map)
+                // console.log(_this.map)
                 //地图移动刷新,防止地图初始化时候，图片叠加图层加载刷新不过来
                 setTimeout(function () {
                   var center = _this.view.center.clone();

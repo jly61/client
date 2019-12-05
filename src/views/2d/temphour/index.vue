@@ -5057,7 +5057,7 @@ export default {
             t.push(parseFloat(_this.points[i].TEM))
             x.push(parseFloat(_this.points[i].docs[0].lon)) // lon
             y.push(parseFloat(_this.points[i].docs[0].lat)) // lat
-            L.circle([y[i], x[i]], { radius: 1 }).addTo(_this.map)
+            L.circle([y[i], x[i]], { radius: 10}).addTo(_this.map).bindPopup('这是个Marker').openPopup();
           }
           const variogram = kriging.train(t, x, y, 'exponential', 0, 100)
           const width = 0.05

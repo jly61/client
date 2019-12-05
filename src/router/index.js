@@ -128,6 +128,11 @@ export const constantRoutes = [
         path: 'dayrain',
         component: () => import('@/views/station/windyhour'),
         meta: { title: '每小时风速风向' }
+      },
+      {
+        path: 'echart',
+        component: () => import('@/views/station/echart'),
+        meta: { title: 'echart' }
       }
     ]
   },

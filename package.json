@@ -18,6 +18,7 @@
         "@sakitam-gis/kriging": "^0.1.0",
         "axios": "0.18.1",
         "echarts": "^4.2.1",
+        "echartslayer": "^0.1.6",
         "element-ui": "2.7.2",
         "esri-loader": "^2.10.0",
         "js-cookie": "2.2.0",
