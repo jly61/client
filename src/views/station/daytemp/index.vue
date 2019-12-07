@@ -11,8 +11,7 @@
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
     </div>
     <!--Echart图表-->
-    <div id="chart" class="chart" />
-    <div id="rain-chart" class="chart" />
+    <div id="chart" class="chart"></div>
   </div>
 </template>
 
@@ -39,12 +38,14 @@ export default {
       currentStation: '金川',
       stationList: [],
       tempList: [],
-      rainList: [],
       dateList: []
     }
   },
   mounted() {
     this.$nextTick(() => {
+      if(this.$route.query.stationName !== undefined) {
+        this.value = this.$route.query.stationName
+      }
       this.getStation()
       this.queryWea()
     })
@@ -74,7 +75,6 @@ export default {
       console.log(param)
       axios.get('http://localhost:3000/stations/dayWea', { params: param }).then(res => {
         this.tempList = []
-        this.rainList = []
         this.dateList = []
 
         this.currentStation = this.value
@@ -82,7 +82,6 @@ export default {
         console.log(arr)
         arr.forEach((item) => {
           this.tempList.push(item.avgTemp.toFixed(2))
-          this.rainList.push(item.totalPre.toFixed(2))
           this.dateList.push(item._id)
         })
         this.initChart()
@@ -95,8 +94,8 @@ export default {
       var myTempChart = echarts.init(tempChart)
       myTempChart.setOption({
         title: {
-          text: '石渠县气温',
-          subtext: '24小时'
+          text: `${this.currentStation}县日平均气温`,
+          // subtext: '24小时'
         },
         tooltip: {
           trigger: 'axis'
@@ -132,63 +131,6 @@ export default {
             name: '日平均气温',
             type: 'line',
             data: this.tempList,
-            markPoint: {
-              data: [
-                { type: 'max', name: '最大值' },
-                { type: 'min', name: '最小值' }
-              ]
-            },
-            markLine: {
-              data: [
-                { type: 'average', name: '平均值' }
-              ]
-            }
-          }
-        ]
-      })
-
-      // 获取站点每小时降雨量，图表
-      const rainChart = document.getElementById('rain-chart')
-      var myRainChart = echarts.init(rainChart)
-      myRainChart.setOption({
-        title: {
-          text: '石渠县降雨量',
-          subtext: '24小时'
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: ['日降雨量']
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            dataZoom: {
-              yAxisIndex: 'none'
-            },
-            dataView: { readOnly: false },
-            magicType: { type: ['line', 'bar'] },
-            restore: {},
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: this.dateList
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter: '{value} mm'
-          }
-        },
-        series: [
-          {
-            name: '日降雨量',
-            type: 'line',
-            data: this.rainList,
             markPoint: {
               data: [
                 { type: 'max', name: '最大值' },

@@ -4989,7 +4989,7 @@
             ]
           ]
         ],
-        points: []
+        points: [],
       }
     },
     watch: {

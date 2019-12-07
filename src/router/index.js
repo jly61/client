@@ -33,6 +33,16 @@ export const constantRoutes = [
 
   // 自己配置
   {
+    "path": "leaf",
+    component: Layout,
+    "children": [
+      {
+        "path": "http://localhost:9528/leaf.html",
+        "meta": { title: "leaf", icon: "link" }
+      }
+    ]
+  },
+  {
     path: '/2d',
     component: Layout,
     redirect: '/2d/temphour',
@@ -110,30 +120,25 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'info',
-        component: () => import('@/views/station/info'),
-        meta: { title: '气象站分布' }
-      },
-      {
-        path: 'daytemp',
-        component: () => import('@/views/station/hour'),
-        meta: { title: '每小时气温降水' }
+        path: 'hourtemp',
+        component: () => import('@/views/station/hourtemp'),
+        meta: { title: '24小时气温' }
       },
       {
         path: 'hourrain',
-        component: () => import('@/views/station/day'),
-        meta: { title: '日气温降水' }
+        component: () => import('@/views/station/hourrain'),
+        meta: { title: '24小时降雨' }
       },
       {
+        path: 'daytemp',
+        component: () => import('@/views/station/daytemp'),
+        meta: { title: '日平均气温' }
+      },{
         path: 'dayrain',
-        component: () => import('@/views/station/windyhour'),
-        meta: { title: '每小时风速风向' }
+        component: () => import('@/views/station/dayrain'),
+        meta: { title: '日总降雨量' }
       },
-      {
-        path: 'echart',
-        component: () => import('@/views/station/echart'),
-        meta: { title: 'echart' }
-      }
+
     ]
   },
 

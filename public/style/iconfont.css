@@ -1,0 +1,25 @@
+@font-face {font-family: "iconfont";
+  src: url('./iconfont/iconfont.eot?t=1575709137907'); /* IE9 */
+  src: url('./iconfont/iconfont.eot?t=1575709137907#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAPAAAsAAAAAB8AAAANzAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDBgqDGIJqATYCJAMMCwgABCAFhG0HSBvCBhEVnF/IfhbYjc6tIFiCJZit92b3RWv1ZBQl4/3O8fDffr/fZ2beRaVBUo2iq5PEG4kkmliEQoqESOl4gi9D62oeAiuMkx9AEhCdtFubdjhqTIRhSs6D7/I/kudhhzB6vk5XqQpZIduAqt3vDLic/n8lPg8olzkmTQwwDijQvaxNVuCaWsPYTZQHcZpAo34TYtPe1RcwKsCkQJwlJUQBxpRJqakO9UJVsrKoUzWCmvpURb0JeOLfj/9gLhiBpJYBOGvr1C4WWP4wP2fRFEI4zKXgYTwHtHVkTKAQx6WuXTRhakLW6Kho64srRUhjRSEILnIVFfzDIwmiAqCyGYxI6cRPIxbF6jtRctbimxtfoR5XgGdT1903v+qi5xRiZQMP5KiG8QdHw2AouEAKvL0NyZvYGu/XLuQXkcV6fOx/fBFwcud3dOR7eJiN5L6B34/t5CRbf+xPPNREjA2IhHwQiBo/Usopj6t+Fn8YvzIMP8mn1IZEUKKqO1BoAQ30eL+gKiKIWR/Wg+/l02vrxnRJMv8KL6qrmzRtcTeULFmncG9KGVgtFeh3v6rLaKu//qqY+S7c7qB+2xFu523vYcFrE1WlShxh2QKNc4x5bLlDODEbGSTN5iYNiga5uYVM/v6g0HP5sft7NHlKbdJnG6V0DsWI+gr2JjQhPfRGJt3l/9SP1OZ9zf1MlrmcnSOF2nIvV996+u8VKtOuTCWZjUW4mSbQc3hEnug51KpLs/+u357ydvBmJ0YkaWx+pKGChihVNKV/6zJx/5N/wmH6zdhEC+C1o3qPy9qVUy/RWvxv8koVNEBlrlQ052Kr1DYGskP0d04QauI/UgudPvvreu4/E+r1xEjq9CGrN0AWxgRqmiygUm8F6EbjyvVNurCzKA0Y8xYQ2n2QtHpB1u5LFsYPNb3+qLTHGY22o2vHJkPhGzfOUQla0C/wZugJWSUIqq/ollZxUsqZT+TZRyGNkmy2xB55jDnz6jIRAuKhg0I4D9t2gJGHGo1ElciYxzGVvSkyQ3cIbGBIEcgC2gvwjEGPaG8R5D5/hZxFS+Gajg7vE2IzPzhIRZIWZKnqW3VcyzWzlZMRggDCBh1QCA7UwtQAjOXDasgQkapHYpSLpW7UVhXNr+mebx80AvvlSJGjaL/0qp98SNi7PbK4S6bIDOPrcAAA') format('woff2'),
+  url('./iconfont/iconfont.woff?t=1575709137907') format('woff'),
+  url('./iconfont/iconfont.ttf?t=1575709137907') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('./iconfont/iconfont.svg?t=1575709137907#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-tianqi-fengxiang:before {
+  content: "\e679";
+}
+
+.icon-tianqi-copy:before {
+  content: "\e60a";
+}
+

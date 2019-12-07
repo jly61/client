@@ -11,8 +11,7 @@
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
     </div>
     <!--Echart图表-->
-    <div id="chart" class="chart" />
-    <div id="rain-chart" class="chart" />
+    <div id="chart" class="chart"></div>
   </div>
 </template>
 
@@ -41,10 +40,13 @@ export default {
       tempList: [],
       tempMaxList: [], // 每小时最高温度
       tempMinList: [], // 每小时最低温度
-      rainList: []
     }
   },
   mounted() {
+    if(this.$route.query.stationName !== undefined) {
+      this.value = this.$route.query.stationName
+    }
+    console.log(this.value)
     this.getStation()
     this.queryWea()
   },
@@ -70,7 +72,6 @@ export default {
       this.tempList = []
       this.tempMaxList = []
       this.tempMinList = []
-      this.rainList = []
 
       const param = {
         'stationName': this.value,
@@ -84,7 +85,6 @@ export default {
         console.log(arr)
         arr.forEach((item) => {
           this.tempList.push(item.TEM)
-          this.rainList.push(item.PRE_1h)
           this.tempMaxList.push(item.TEM_Max)
           this.tempMinList.push(item.TEM_Min)
         })
@@ -191,64 +191,6 @@ export default {
                   type: 'max',
                   name: '最高点'
                 }]
-              ]
-            }
-          }
-        ]
-      })
-
-      // 获取站点每小时降雨量，图表
-      const rainChart = document.getElementById('rain-chart')
-      var myRainChart = echarts.init(rainChart)
-      // myRainChart.clear();
-      myRainChart.setOption({
-        title: {
-          text: `${this.currentStation}县降雨量`,
-          subtext: '每小时'
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: ['最高气温', '最低气温']
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            dataZoom: {
-              yAxisIndex: 'none'
-            },
-            dataView: { readOnly: false },
-            magicType: { type: ['line', 'bar'] },
-            restore: {},
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter: '{value} mm'
-          }
-        },
-        series: [
-          {
-            name: '降雨量',
-            type: 'line',
-            data: this.rainList,
-            markPoint: {
-              data: [
-                { type: 'max', name: '最大值' },
-                { type: 'min', name: '最小值' }
-              ]
-            },
-            markLine: {
-              data: [
-                { type: 'average', name: '平均值' }
               ]
             }
           }
