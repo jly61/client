@@ -33,12 +33,12 @@ export const constantRoutes = [
 
   // 自己配置
   {
-    "path": "leaf",
+    'path': 'leaf',
     component: Layout,
-    "children": [
+    'children': [
       {
-        "path": "http://localhost:9528/leaf.html",
-        "meta": { title: "leaf", icon: "link" }
+        'path': 'http://localhost:9528/leaf.html',
+        'meta': { title: 'leaf', icon: 'link' }
       }
     ]
   },
@@ -133,12 +133,48 @@ export const constantRoutes = [
         path: 'daytemp',
         component: () => import('@/views/station/daytemp'),
         meta: { title: '日平均气温' }
-      },{
+      }, {
         path: 'dayrain',
         component: () => import('@/views/station/dayrain'),
         meta: { title: '日总降雨量' }
-      },
+      }
+    ]
+  },
+  {
+    path: '/norm',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/norm/index'),
+        name: 'norm',
+        meta: { title: '农业气象指标', icon: 'form' }
+      }
+    ]
+  },
 
+  {
+    path: '/map',
+    component: Layout,
+    redirect: '/map/tempday',
+    name: 'Map',
+    meta: {
+      title: '气象专题图',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'tempday',
+        name: 'tempday',
+        component: () => import('@/views/map/tempday'),
+        meta: { title: '日平均气温专题图', icon: 'form' }
+      },
+      {
+        path: 'rainday',
+        name: 'rainday',
+        component: () => import('@/views/map/rainday'),
+        meta: { title: '日降雨量专题图', icon: 'form' }
+      }
     ]
   },
 

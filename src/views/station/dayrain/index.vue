@@ -43,6 +43,9 @@
     },
     mounted() {
       this.$nextTick(() => {
+        if(this.$route.query.stationName !== undefined) {
+          this.value = this.$route.query.stationName
+        }
         this.getStation()
         this.queryWea()
       })
