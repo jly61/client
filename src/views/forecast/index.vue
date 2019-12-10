@@ -29,6 +29,11 @@
         createdTimes: 0
       }
     },
+    mounted() {
+      console.log(this.$route.query.lon)
+      console.log(this.$route.query.lat)
+      console.log(this.$route.query.stationName)
+    },
     watch: {
       activeName(val) {
         this.$router.push(`${this.$route.path}?tab=${val}`)

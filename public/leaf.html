@@ -85,18 +85,35 @@
 
     .btn {
       display: inline-block;
-      margin-top: 10px;
+      margin-top: 20px;
       width: 48%;
       height: 40px;
       line-height: 40px;
       cursor: pointer;
       border: 1px solid #dcdfe6;
       border-radius: 4px;
+      font-size: 14px;
     }
 
     .btn:hover {
       border-color: #409eff;
       color: #409eff;
+    }
+    .forecast {
+      display: inline-block;
+      margin-top: 20px;
+      width: 48%;
+      height: 40px;
+      line-height: 40px;
+      cursor: pointer;
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
+      background: #67c23a;
+      color: #fff;
+      font-size: 14px;
+    }
+    .forecast:hover {
+      background: rgba(103, 194, 58, 0.8);
     }
 
     /* 固定导航 */
@@ -112,6 +129,7 @@
     }
 
     .element-wrap {
+      display: flex;
       float: right;
       margin: 0;
       cursor: pointer;
@@ -210,6 +228,18 @@
     .item-control .select-wrap.spread .option {
       display: block;
     }
+
+    /* 实时坐标 */
+    .lonlat {
+      width: 420px;
+      /*padding: 0 5px;*/
+      background: #fff;
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      z-index: 9999;
+      text-align: center;
+    }
   </style>
   <script src="https://cdn.bootcss.com/echarts/4.2.1/echarts.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>
@@ -243,12 +273,12 @@
       <td class="station-id"></td>
     </tr>
     <tr>
-      <td>经度</td>
-      <td class="lon"></td>
+      <td>经度(lng)</td>
+      <td class="station-lon"></td>
     </tr>
     <tr>
-      <td>纬度()</td>
-      <td class="lat"></td>
+      <td>纬度(lat)</td>
+      <td class="station-lat"></td>
     </tr>
     <tr>
       <td>观测场海拔(m)</td>
@@ -268,6 +298,7 @@
     <button class="btn hour-rain">24小时降雨量</button>
     <button class="btn day-temp">日平均气温</button>
     <button class="btn day-rain">日总降雨量</button>
+    <button class="forecast">农业特色预报</button>
   </div>
 </div>
 <div class="header">
@@ -282,16 +313,30 @@
   <ul class="element-wrap">
     <li class="element-title">
       <i class="iconfont icon-tianqi-copy"></i>
-      气象要素
+      未来
       <ul class="element">
-        <li class="temp-btn">气温</li>
-        <li class="rain-btn">降水</li>
+        <li class="element-btn 24-hour">24小时</li>
+        <li class="element-btn 48-hour">48小时</li>
       </ul>
     </li>
+
+    <li class="element-title">
+      <i class="iconfont icon-tianqi-copy"></i>
+      气象要素
+      <ul class="element">
+        <li class="element-btn temp-btn">气温</li>
+        <li class="element-btn rain-btn">降水</li>
+      </ul>
+    </li>
+
   </ul>
 </div>
 <!--<div class="banner">2019-11-11</div>-->
-
+<div class="lonlat">
+  <span class="zoom"></span>
+  <span class="lon"></span>
+  <span class="lat"></span>
+</div>
 <canvas id="canvasMap" style="display:none;"></canvas>
 
 <div id="map">
@@ -305,7 +350,7 @@
 
   const map = L.map('map', {
     center: [29.65953686, 102.8696333],
-    zoom: 7
+    zoom: 7,
   })
   const url = 'http://webrd0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8'
   new L.TileLayer(url, {
@@ -332,14 +377,15 @@
 
   const xlim = [97.3481, 108.5467]
   const ylim = [26.0459, 34.3129]
-  const param = {
-    month: 6,
-    day: 27,
-    hour: 10
-  }
+
   let points = []
 
-  function loadTemp() {
+  function loadTemp(month, day) {
+    const param = {
+      month: 6,
+      day: 27,
+      hour: 10
+    }
     map.eachLayer(function(layer) {
       if (!layer._container || ('' + $(layer._container).attr('class')).replace(/\s/g, '') !== 'leaflet-layer') {
         layer.remove()
@@ -382,10 +428,11 @@
           if (i > 4) {
             L.marker([y[i], x[i]], { icon: myIcon }).addTo(map).on('click', function(e) {
               let point = formatPoint(y[i], x[i])
+              console.log(point)
               document.querySelector('.station-name').innerHTML = stationName[i]
               document.querySelector('.station-id').innerHTML = stationId[i]
-              document.querySelector('.lon').innerHTML = point[1]
-              document.querySelector('.lat').innerHTML = point[0]
+              document.querySelector('.station-lon').innerHTML = point[1]
+              document.querySelector('.station-lat').innerHTML = point[0]
               document.querySelector('.observe-alt').innerHTML = `${observe_alt[i]}m`
               document.querySelector('.temp').innerHTML = t[i] + '&#8451'
               document.querySelector('.rain').innerHTML = r[i] + 'mm'
@@ -395,6 +442,7 @@
               const hourRain = document.querySelector('.hour-rain')
               const dayTemp = document.querySelector('.day-temp')
               const dayRain = document.querySelector('.day-rain')
+              const forecast = document.querySelector('.forecast')
 
               function toHourTemp() {
                 window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}`
@@ -412,10 +460,17 @@
                 window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}`
               }
 
+              function toForecast() {
+                window.location.href = `http://localhost:9528/#/forecast/index?stationName=
+                ${stationName[i]}&lon=${x[i]}&lat=${y[i]}`
+              }
+
               hourTemp.addEventListener('click', toHourTemp)
               hourRain.addEventListener('click', toHourRain)
               dayTemp.addEventListener('click', toDayTemp)
               dayRain.addEventListener('click', toDayRain)
+              forecast.addEventListener('click', toForecast)
+
             }).on('mouseover', function(e) {
               e.target.options.className = 'icon-hover'
               this.bindPopup(`${stationName[i]}:${t[i]}&#8451`).openPopup()
@@ -510,6 +565,11 @@
   }
 
   function loadRain() {
+    const param = {
+      month: 7,
+      day: 2,
+      hour: 0
+    }
     //移除除底图外的所有图层
     map.eachLayer(function(layer) {
       if (!layer._container || ('' + $(layer._container).attr('class')).replace(/\s/g, '') !== 'leaflet-layer') {
@@ -550,16 +610,18 @@
           stationId.push(points[i].docs[0].Station_Id_C)
           observe_alt.push(points[i].docs[0].Observe_alt)
           // L.circle([y[i], x[i]], {radius: 1}).addTo(map);
-          if (i > 4) {
+          if (points[i].PRE_1h < 16) {
             L.marker([y[i], x[i]], { icon: myIcon }).addTo(map).on('click', function(e) {
               let point = formatPoint(y[i], x[i])
+              console.log(r[i])
+              console.log(point)
               document.querySelector('.station-name').innerHTML = stationName[i]
               document.querySelector('.station-id').innerHTML = stationId[i]
-              document.querySelector('.lon').innerHTML = point[1]
-              document.querySelector('.lat').innerHTML = point[0]
+              document.querySelector('.station-lon').innerHTML = point[1]
+              document.querySelector('.station-lat').innerHTML = point[0]
               document.querySelector('.observe-alt').innerHTML = `${observe_alt[i]}m`
               document.querySelector('.temp').innerHTML = t[i] + '&#8451'
-              document.querySelector('.rain').innerHTML = r[i] + '&#8451'
+              document.querySelector('.rain').innerHTML = r[i] + 'mm'
               sidebar.show()
               // 侧边栏跳转
               const hourTemp = document.querySelector('.hour-temp')
@@ -598,10 +660,11 @@
               let point = formatPoint(y[i], x[i])
               document.querySelector('.station-name').innerHTML = `气象站名：${stationName[i]}`
               document.querySelector('.station-id').innerHTML = stationId[i]
-              document.querySelector('.lon').innerHTML = point[1]
-              document.querySelector('.lat').innerHTML = point[0]
+              document.querySelector('.station-lon').innerHTML = point[1]
+              document.querySelector('.station-lat').innerHTML = point[0]
               document.querySelector('.observe-alt').innerHTML = `${observe_alt[i]}m`
               document.querySelector('.temp').innerHTML = t[i] + '&#8451'
+              document.querySelector('.rain').innerHTML = r[i] + 'mm'
               sidebar.show()
             }).on('mouseover', function(e) {
               e.target.options.className = 'icon-hover'
@@ -690,10 +753,17 @@
     })
   }
 
-  setTimeout(function() {
-    loadTemp()
-  }, 20)
 
+  setTimeout(function() {
+    loadTemp(6, 26)
+  }, 20)
+  map.on('mousemove', function(e) {
+    // console.log(e.sourceTarget.boxZoom._map._zoom)
+    document.querySelector('.zoom').innerText = `Zoom:${e.sourceTarget.boxZoom._map._zoom}`
+    document.querySelector('.lon').innerText = `Lon:${e.latlng.lng}`
+    document.querySelector('.lat').innerText = `Lat:${e.latlng.lat}`
+    // console.log(e.latlng.lat, e.latlng.lng)`
+  })
   // 切换要素
   const tempBtn = document.querySelector('.temp-btn')
   const rainBtn = document.querySelector('.rain-btn')
@@ -721,7 +791,7 @@
         const selectTime = `${y}-${m}-${d}`;
         const $target = document.querySelector('.js-select-calendar .text');
         console.log(y, m, d)
-        loadTemp(year, month, day)
+        loadTemp(m, d)
         $target.classList.add('completed');
         $target.innerText = selectTime;
         optionHandler($selectControl);

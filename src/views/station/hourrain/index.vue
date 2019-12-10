@@ -98,8 +98,8 @@
         // myRainChart.clear();
         myRainChart.setOption({
           title: {
-            text: `${this.currentStation}县降雨量`,
-            subtext: '每小时'
+            text: `${this.currentStation}每小时降雨量`,
+            subtext: '0-23h'
           },
           tooltip: {
             trigger: 'axis'
@@ -135,6 +135,14 @@
               name: '降雨量',
               type: 'line',
               data: this.rainList,
+              itemStyle: {
+                normal: {
+                  color: '#386db3',//折线点的颜色
+                  lineStyle: {
+                    color: '#386db3' //折线的颜色
+                  }
+                }
+              },
               markPoint: {
                 data: [
                   { type: 'max', name: '最大值' },
@@ -167,6 +175,6 @@
       display flex
     .chart
       width 100%
-      height 400px
-      margin-top 20px
+      height 700px
+      margin-top 50px
 </style>

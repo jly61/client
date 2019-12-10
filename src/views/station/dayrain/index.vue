@@ -4,9 +4,11 @@
     <!--查询站点-->
     <div class="select">
       <!--日历-->
-      <date-select :picker-type="2" class="btn date-picker" @sendDate="showChild" />
+      <date-select :picker-type="2" class="btn date-picker" @sendDate="showChild"/>
       <el-select v-model="value" class="btn" :picker-type="2" placeholder="选择站点" @click="getValue($event)">
-        <el-option v-for="(station, index) in stationList" v-if="stationList.length > 0" :value="station">{{ station }}</el-option>
+        <el-option v-for="(station, index) in stationList" v-if="stationList.length > 0" :value="station">{{ station
+          }}
+        </el-option>
       </el-select>
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
     </div>
@@ -43,7 +45,7 @@
     },
     mounted() {
       this.$nextTick(() => {
-        if(this.$route.query.stationName !== undefined) {
+        if (this.$route.query.stationName !== undefined) {
           this.value = this.$route.query.stationName
         }
         this.getStation()
@@ -94,8 +96,8 @@
         var myRainChart = echarts.init(rainChart)
         myRainChart.setOption({
           title: {
-            text: `${this.currentStation}县日总降雨量`,
-            // subtext: '24小时'
+            text: `${this.currentStation}日总降雨量`,
+            subtext: `${this.dateList[0]}日 - ${this.dateList[this.dateList.length - 1]}日`
           },
           tooltip: {
             trigger: 'axis'
@@ -128,9 +130,17 @@
           },
           series: [
             {
-              name: '日降雨量',
+              name: '日总降雨量',
               type: 'line',
               data: this.rainList,
+              itemStyle: {
+                normal: {
+                  color: '#386db3',//折线点的颜色
+                  lineStyle: {
+                    color: '#386db3' //折线的颜色
+                  }
+                }
+              },
               markPoint: {
                 data: [
                   { type: 'max', name: '最大值' },
@@ -157,12 +167,15 @@
     height 100%
     overflow hidden
     box-sizing border-box
+
     .btn
       margin-right 10px
+
     .select
       display flex
+
     .chart
       width 100%
-      height 400px
-      margin-top 20px
+      height 700px
+      margin-top 50px
 </style>

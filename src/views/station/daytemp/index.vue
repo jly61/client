@@ -4,11 +4,15 @@
     <!--查询站点-->
     <div class="select">
       <!--日历-->
-      <date-select :picker-type="2" class="btn date-picker" @sendDate="showChild" />
+      <date-select :picker-type="2" class="btn date-picker" @sendDate="showChild"/>
       <el-select v-model="value" class="btn" :picker-type="2" placeholder="选择站点" @click="getValue($event)">
-        <el-option v-for="(station, index) in stationList" v-if="stationList.length > 0" :value="station">{{ station }}</el-option>
+        <el-option v-for="(station, index) in stationList" v-if="stationList.length > 0" :value="station">{{ station
+          }}
+        </el-option>
       </el-select>
-      <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
+      <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea()">查询</el-button>
+      <el-button class="btn" @click="querySeven()">未来7天</el-button>
+
     </div>
     <!--Echart图表-->
     <div id="chart" class="chart"></div>
@@ -16,153 +20,242 @@
 </template>
 
 <script>
-import axios from 'axios'
-import DateSelect from '@/components/Dateselect' // 引入日历组件
-import echarts from 'echarts'
-import { formatDate } from '@/utils/util'
+  import axios from 'axios'
+  import DateSelect from '@/components/Dateselect' // 引入日历组件
+  import echarts from 'echarts'
+  import { formatDate } from '@/utils/util'
 
-export default {
-  name: 'StationDayWeather',
-  components: {
-    DateSelect
-  },
-  data() {
-    return {
-      date: {
-        startMonth: 6,
-        startDay: 26,
-        endMonth: 6,
-        endDay: 30
+  export default {
+    name: 'StationDayWeather',
+    components: {
+      DateSelect
+    },
+    data() {
+      return {
+        date: {
+          startMonth: 6,
+          startDay: 26,
+          endMonth: 6,
+          endDay: 30
+        },
+        value: '金川',
+        currentStation: '金川',
+        stationList: [],
+        tempList: [],
+        dateList: [],
+        cityId: ''
+      }
+    },
+    mounted() {
+      this.$nextTick(() => {
+        if (this.$route.query.stationName !== undefined) {
+          this.value = this.$route.query.stationName
+        }
+        this.getStation()
+        this.queryWea()
+      })
+    },
+    methods: {
+      showChild(date) {
+        this.date = formatDate(date)
       },
-      value: '金川',
-      currentStation: '金川',
-      stationList: [],
-      tempList: [],
-      dateList: []
-    }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      if(this.$route.query.stationName !== undefined) {
-        this.value = this.$route.query.stationName
-      }
-      this.getStation()
-      this.queryWea()
-    })
-  },
-  methods: {
-    showChild(date) {
-      this.date = formatDate(date)
-    },
-    // 获取站点信息
-    getStation() {
-      axios('http://localhost:3000/stations').then((res) => {
-        const resList = res.data.result
-        resList.forEach((item) => {
-          this.stationList.push(item.Station_name)
+      // 获取站点信息
+      getStation() {
+        axios('http://localhost:3000/stations').then((res) => {
+          const resList = res.data.result
+          resList.forEach((item) => {
+            this.stationList.push(item.Station_name)
+          })
         })
-      })
-    },
-    // 获取站点天气
-    queryWea() {
-      const param = {
-        'stationName': this.value,
-        'startMonth': this.date.startMonth,
-        'startDay': this.date.startDay,
-        'endMonth': this.date.endMonth,
-        'endDay': this.date.endDay
-      }
-      console.log(param)
-      axios.get('http://localhost:3000/stations/dayWea', { params: param }).then(res => {
+      },
+      // 获取站点天气
+      queryWea() {
         this.tempList = []
+        this.tempMaxList = []
+        this.tempMinList = []
         this.dateList = []
-
-        this.currentStation = this.value
-        const arr = res.data.result
-        console.log(arr)
-        arr.forEach((item) => {
-          this.tempList.push(item.avgTemp.toFixed(2))
-          this.dateList.push(item._id)
+        console.log(this.tempMinList)
+        const param = {
+          'stationName': this.value,
+          'startMonth': this.date.startMonth,
+          'startDay': this.date.startDay,
+          'endMonth': this.date.endMonth,
+          'endDay': this.date.endDay
+        }
+        console.log(param)
+        axios.get('http://localhost:3000/stations/dayWea', { params: param }).then(res => {
+          this.currentStation = this.value
+          const arr = res.data.result
+          console.log(arr)
+          arr.forEach((item) => {
+            this.tempList.push(item.avgTemp.toFixed(2))
+            this.dateList.push(item._id)
+          })
+          this.initChart('one')
         })
-        this.initChart()
-      })
-    },
-    // 初始化图表
-    initChart() {
-      // //获取站点每小时气温，图表
-      const tempChart = document.getElementById('chart')
-      var myTempChart = echarts.init(tempChart)
-      myTempChart.setOption({
-        title: {
-          text: `${this.currentStation}县日平均气温`,
-          // subtext: '24小时'
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: ['每小时最高气温', '日平均气温', '每小时最低气温']
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            dataZoom: {
-              yAxisIndex: 'none'
+      },
+
+      querySeven() {
+        this.tempList = []
+        this.tempMaxList = []
+        this.tempMinList = []
+        this.dateList = []
+        const param = {
+          'cityName': this.value
+        }
+        console.log(param)
+        axios.get('http://localhost:3000/citys', { params: param }).then(res => {
+          this.cityId = res.data.result[0].city_id
+          axios.get(`/weather/${this.cityId}`).then(res => {
+            this.currentStation = this.value
+            const arr = res.data.data.forecast.slice(0, 7)
+            console.log(arr)
+            arr.forEach((item, index) => {
+              this.tempMaxList.push(item.high.replace(/[^0-9]/ig, ''))
+              this.tempMinList.push(item.low.replace(/[^0-9]/ig, ''))
+              this.dateList.push(`${item.ymd.split('-')[1]}-${item.ymd.split('-')[2]}`)
+            })
+            console.log(this.dateList)
+            this.initChart('seven')
+          })
+        })
+      },
+      // 初始化图表
+      initChart(type) {
+        // //获取站点每小时气温，图表
+        const tempChart = document.getElementById('chart')
+        var myTempChart = echarts.init(tempChart)
+        if (type === 'one') {
+          myTempChart.setOption({
+            title: {
+              text: `${this.currentStation}日平均气温`,
+              subtext: `${this.dateList[0]}日 - ${this.dateList[this.dateList.length - 1]}日`
             },
-            dataView: { readOnly: false },
-            magicType: { type: ['line', 'bar'] },
-            restore: {},
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: this.dateList
-        },
-        yAxis: {
-          type: 'value',
-          axisLabel: {
-            formatter: '{value} °C'
-          }
-        },
-        series: [
-          {
-            name: '日平均气温',
-            type: 'line',
-            data: this.tempList,
-            markPoint: {
-              data: [
-                { type: 'max', name: '最大值' },
-                { type: 'min', name: '最小值' }
-              ]
+            tooltip: {
+              trigger: 'axis'
             },
-            markLine: {
-              data: [
-                { type: 'average', name: '平均值' }
-              ]
-            }
-          }
-        ]
-      })
+            legend: {
+              data: ['日平均气温']
+            },
+            toolbox: {
+              show: true,
+              feature: {
+                dataZoom: {
+                  yAxisIndex: 'none'
+                },
+                dataView: { readOnly: false },
+                magicType: { type: ['line', 'bar'] },
+                restore: {},
+                saveAsImage: {}
+              }
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: this.dateList
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                formatter: '{value} °C'
+              }
+            },
+            series: [
+              {
+                name: '日平均气温',
+                type: 'line',
+                data: this.tempList,
+                markPoint: {
+                  data: [
+                    { type: 'max', name: '最大值' },
+                    { type: 'min', name: '最小值' }
+                  ]
+                },
+                markLine: {
+                  data: [
+                    { type: 'average', name: '平均值' }
+                  ]
+                }
+              }
+            ]
+          })
+        } else {
+          myTempChart.setOption({
+            title: {
+              text: `${this.currentStation}日平均气温`,
+              subtext: `${this.dateList[0]}日 - ${this.dateList[this.dateList.length - 1]}日`
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data: ['日最高气温', '日最低气温']
+            },
+            toolbox: {
+              show: true,
+              feature: {
+                dataZoom: {
+                  yAxisIndex: 'none'
+                },
+                dataView: { readOnly: false },
+                magicType: { type: ['line', 'bar'] },
+                restore: {},
+                saveAsImage: {}
+              }
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: this.dateList
+            },
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                formatter: '{value} °C'
+              }
+            },
+            series: [
+              {
+                name: '日最高气温',
+                type: 'line',
+                data: this.tempMaxList,
+                markPoint: {
+                  data: [
+                    { type: 'max', name: '最大值' },
+                    { type: 'min', name: '最小值' }
+                  ]
+                }
+              },
+              {
+                name: '日最低气温',
+                type: 'line',
+                data: this.tempMinList
+              }
+            ]
+          })
+        }
+
+      }
     }
   }
-}
 </script>
 
 <style lang="stylus" scoped>
-    .wrap
-        padding 10px
-        width 100%
-        height 100%
-        overflow hidden
-        box-sizing border-box
-        .btn
-            margin-right 10px
-        .select
-            display flex
-        .chart
-            width 100%
-            height 400px
-            margin-top 20px
+  .wrap
+    padding 10px
+    width 100%
+    height 100%
+    overflow hidden
+    box-sizing border-box
+
+    .btn
+      margin-right 10px
+
+    .select
+      display flex
+
+    .chart
+      width 100%
+      height 700px
+      margin-top 50px
 </style>
