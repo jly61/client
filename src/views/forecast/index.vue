@@ -1,11 +1,12 @@
 <template>
   <div class="tab-container">
-    <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;"
-              title="农业气象指标库" type="success"/>
+    <h3>明日平均气温:
+      <span>{{tomorrowTemp}}&#8451;</span>
+    </h3>
     <el-tabs v-model="activeName" style="margin-top:15px;" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
         <keep-alive>
-          <tab-pane v-if="activeName===item.key" :listType="item.key" @create="showCreatedTimes"/>
+          <tab-pane v-if="activeName===item.key" @create="showCreatedTimes"/>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -26,13 +27,12 @@
           { label: '玉米', key: 'corn' }
         ],
         activeName: 'rice',
-        createdTimes: 0
+        createdTimes: 0,
+        lon: '100.18',
+        lat: '29.03',
+        stationName: '稻城',
+        tomorrowTemp: '25'
       }
-    },
-    mounted() {
-      console.log(this.$route.query.lon)
-      console.log(this.$route.query.lat)
-      console.log(this.$route.query.stationName)
     },
     watch: {
       activeName(val) {
@@ -49,6 +49,9 @@
     methods: {
       showCreatedTimes() {
         this.createdTimes = this.createdTimes + 1
+      },
+      queryWeather() {
+
       }
     }
   }

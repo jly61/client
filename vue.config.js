@@ -51,7 +51,14 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {
           '^/weather': ''
-        }
+        },
+      },
+      '/caiyun': {
+        target: 'https://api.caiyunapp.com/v2/TAkhjf8d1nlSlspN',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/caiyun': ''
+        },
       }
     },
     after: require('./mock/mock-server.js')
