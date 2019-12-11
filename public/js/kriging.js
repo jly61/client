@@ -449,7 +449,34 @@ var kriging = function() {
     // Clear screen
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    // colors = [
+    //   { min: -50, max: -45, color: "#2e0057" },
+    //   { min: -45, max: -40, color: "#4a008b" },
+    //   { min: -40, max: -35, color: "#0d0b66" },
+    //   { min: -35, max: -30, color: "#0c2695" },
+    //   { min: -30, max: -25, color: "#0c43c4" },
+    //   { min: -25, max: -20, color: "#1a6bd7" },
+    //   { min: -20, max: -15, color: "#3492f4" },
+    //   { min: -15, max: -10, color: "#67b7f7" },
+    //   { min: -10, max: -5, color: "#96cef4" },
+    //   { min: -5, max: -0, color: "#c1e6f9" },
+    //   { min: 0, max: 5, color: "#fefec6" },
+    //   { min: 5, max: 10, color: "#f8f1a1" },
+    //   { min: 10, max: 15, color: "#ffe479" },
+    //   { min: 15, max: 20, color: "#ffcc4f" },
+    //   { min: 20, max: 25, color: "#f19906" },
+    //   { min: 25, max: 30, color: "#f07609" },
+    //   { min: 30, max: 35, color: "#eb481f" },
+    //   { min: 35, max: 40, color: "#ab0110" },
+    //   { min: 40, max: 45, color: "#650015" },
+    //   { min: 45, max: 50, color: "#44000b" }
+    // ]
+    function getColor(colors, z) {
+      var l = colors.length;
+      for (var i = 0; i < l; i++) {
+        if (z >= colors[i].min && z < colors[i].max) return colors[i].color;
+      }
+    }
     // Starting boundaries
     var range = [xlim[1]-xlim[0], ylim[1]-ylim[0], grid.zlim[1]-grid.zlim[0]];
     var i, j, x, y, z;
@@ -462,14 +489,15 @@ var kriging = function() {
         if(grid[i][j]==undefined) continue;
         x = canvas.width*(i*grid.width+grid.xlim[0]-xlim[0])/range[0];
         y = canvas.height*(1-(j*grid.width+grid.ylim[0]-ylim[0])/range[1]);
-        z = (grid[i][j]-grid.zlim[0])/range[2];
-        if(z<0.0) z = 0.0;
-        if(z>1.0) z = 1.0;
-
-        ctx.fillStyle = colors[Math.floor((colors.length-1)*z)];
+        // z = (grid[i][j]-grid.zlim[0])/range[2];
+        z = grid[i][j]
+        console.log(z)
+        // if(z<0.0) z = 0.0;
+        // if(z>1.0) z = 1.0;
+        // ctx.fillStyle = colors[Math.floor((colors.length-1)*z)];
+        ctx.fillStyle = getColor(colors, z)
         ctx.fillRect(Math.round(x-wx/2), Math.round(y-wy/2), wx, wy);
       }
-
   };
 
 

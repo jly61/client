@@ -1,7 +1,15 @@
 <template>
   <div class="container">
+    <div class="date-wrap">
+      <date-select class="btn date-picker" :picker-type="1" @sendDate="showChild" />
+      <el-select v-model="currentHour" class="btn" :picker-type="2" placeholder="选择时次" @click="getValue($event)">
+        <el-option v-for="(hour, index) in hourList" v-if="hourList.length > 0" :value="hour">{{ hour
+          }}
+        </el-option>
+      </el-select>
+    </div>
+
     <canvas id="canvasMap" style="display:none;"></canvas>
-    <date-select class="date-picker" :picker-type="1" @sendDate="showChild" />
     <div class="img-wrap">
       <img :src="imgUrl" alt="专题图">
     </div>
@@ -4966,7 +4974,9 @@
           ]
         ],
         points: [],
-        imgUrl: ''
+        imgUrl: '',
+        hourList: [],
+        currentHour: new Date().getHours()
       }
     },
     watch: {
@@ -4975,6 +4985,9 @@
       }
     },
     mounted() {
+      for (let i=0; i < 24; i++) {
+        this.hourList.push(i)
+      }
       this.drawCanvas(this.month, this.day)
     },
     methods: {
@@ -5055,17 +5068,17 @@
 </script>
 
 <style>
-  .date-picker {
-    position: absolute;
-    bottom: 10px;
-    left:  calc(20% - 218px);
-    background: white;
-    z-index: 99;
+  .date-wrap {
+    display: flex;
+    margin-top: 20px;
+  }
+  .btn {
+    margin-left: 20px;
   }
   .img-wrap {
     width: 700px;
     height: 700px;
-    margin: 10px auto;
+    margin: 20px auto;
   }
 
 </style>

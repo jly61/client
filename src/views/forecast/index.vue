@@ -3,6 +3,11 @@
     <h3>明日平均气温:
       <span>{{tomorrowTemp}}&#8451;</span>
     </h3>
+    <el-row>
+      <el-button plain><span>10</span>月<span>12</span>日</el-button>
+      <el-button plain><span>10</span>月<span>13</span>日</el-button>
+      <el-button plain><span>10</span>月<span>14</span>日</el-button>
+    </el-row>
     <el-tabs v-model="activeName" style="margin-top:15px;" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
         <keep-alive>

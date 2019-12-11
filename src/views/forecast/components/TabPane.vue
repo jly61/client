@@ -10,7 +10,7 @@
       </el-table-column>
       <el-table-column
         prop="suit"
-        label="适宜程度"
+        label="适宜度"
         width="180">
       </el-table-column>
       <el-table-column
@@ -34,7 +34,7 @@
         lon: '100.18',
         lat: '29.03',
         stationName: '稻城',
-        tomorrowTemp: '24'
+        futureTemp: '24'
       }
     },
     mounted() {
@@ -51,7 +51,9 @@
       // } else {
       //   this.getRice()
       // }
-      this.listType = this.$route.query.tab
+      if(this.$route.query.tab !== undefined) {
+        this.listType = this.$route.query.tab
+      }
       this.getRice()
     },
     methods: {
@@ -60,34 +62,34 @@
           console.log(res)
           if (res.status === 200) {
             res.data.result.forEach(item => {
-              if(this.tomorrowTemp < item.min_temp) {
+              if(this.futureTemp < item.min_temp) {
                 this.list.push({
                   'period': item.period,
-                  'suit': '温度过低，可能出现冻害',
+                  'suit': '不适宜，温度过低，可能出现冻害',
                   'suggest': '需要增温'
                 })
-              } else if(this.tomorrowTemp > item.max_temp){
+              } else if(this.futureTemp > item.max_temp){
                 this.list.push({
                   'period': item.period,
-                  'suit': '温度过高',
+                  'suit': '不适宜，温度过高',
                   'suggest': '需要降温'
                 })
-              } else if(this.tomorrowTemp < item.suit.split('-')[0] && this.tomorrowTemp > item.min_temp){
+              } else if(this.futureTemp < item.suit.split('-')[0] && this.futureTemp > item.min_temp){
                 this.list.push({
                   'period': item.period,
-                  'suit': '温度偏低',
+                  'suit': '较适宜，温度偏低',
                   'suggest': '可以升温'
                 })
-              } else if(this.tomorrowTemp > item.suit.split('-')[1] && this.tomorrowTemp < item.max_temp){
+              } else if(this.futureTemp > item.suit.split('-')[1] && this.futureTemp < item.max_temp){
                 this.list.push({
                   'period': item.period,
-                  'suit': '温度偏高',
+                  'suit': '较适宜，温度偏高',
                   'suggest': '可以降温'
                 })
               } else {
                 this.list.push({
                   'period': item.period,
-                  'suit': '温度适宜',
+                  'suit': '适宜',
                   'suggest': ''
                 })
               }
