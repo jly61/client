@@ -490,8 +490,9 @@ var kriging = function() {
         x = canvas.width*(i*grid.width+grid.xlim[0]-xlim[0])/range[0];
         y = canvas.height*(1-(j*grid.width+grid.ylim[0]-ylim[0])/range[1]);
         // z = (grid[i][j]-grid.zlim[0])/range[2];
-        z = grid[i][j]
-        console.log(z)
+        // z = grid[i][j]
+        z = 35
+        // console.log(z)
         // if(z<0.0) z = 0.0;
         // if(z>1.0) z = 1.0;
         // ctx.fillStyle = colors[Math.floor((colors.length-1)*z)];
