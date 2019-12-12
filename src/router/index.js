@@ -33,12 +33,12 @@ export const constantRoutes = [
 
   // 自己配置
   {
-    'path': 'GIS气象要素',
+    'path': '',
     component: Layout,
     'children': [
       {
         'path': 'http://localhost:9528/leaf.html',
-        'meta': { title: 'leaf', icon: 'link' }
+        'meta': { title: 'GIS实时气象', icon: 'link' }
       }
     ]
   },
@@ -155,13 +155,24 @@ export const constantRoutes = [
   {
     path: '/norm',
     component: Layout,
+    name: 'norm',
+    meta: {
+      title: '农业气象指标库',
+      icon: 'nested'
+    },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/norm/index'),
-        name: 'norm',
-        meta: { title: '农业气象指标库', icon: 'form' }
-      }
+        path: 'service',
+        component: () => import('@/views/norm/service'),
+        name: 'service',
+        meta: { title: '农业气象服务指标', icon: 'form' }
+      },
+      {
+        path: 'disaster',
+        component: () => import('@/views/norm/disaster'),
+        name: 'disaster',
+        meta: { title: '气象灾害指标', icon: 'form' }
+      },
     ]
   },
 
