@@ -1,23 +1,23 @@
 <template>
-    <el-table
-      :data="list"
-      stripe
-      style="width: 100%">
-      <el-table-column
-        prop="period"
-        label="生长时期"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="suit"
-        label="适宜度"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="suggest"
-        label="建议措施">
-      </el-table-column>
-    </el-table>
+  <el-table
+    :data="list"
+    stripe
+    style="width: 100%">
+    <el-table-column
+      prop="period"
+      label="生长时期"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="suit"
+      label="适宜度"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="suggest"
+      label="建议措施">
+    </el-table-column>
+  </el-table>
 </template>
 
 <script>
@@ -51,7 +51,7 @@
       // } else {
       //   this.getRice()
       // }
-      if(this.$route.query.tab !== undefined) {
+      if (this.$route.query.tab !== undefined) {
         this.listType = this.$route.query.tab
       }
       this.getRice()
@@ -62,25 +62,25 @@
           console.log(res)
           if (res.status === 200) {
             res.data.result.forEach(item => {
-              if(this.futureTemp < item.min_temp) {
+              if (this.futureTemp < item.min_temp) {
                 this.list.push({
                   'period': item.period,
                   'suit': '不适宜，温度过低，可能出现冻害',
                   'suggest': '需要增温'
                 })
-              } else if(this.futureTemp > item.max_temp){
+              } else if (this.futureTemp > item.max_temp) {
                 this.list.push({
                   'period': item.period,
                   'suit': '不适宜，温度过高',
                   'suggest': '需要降温'
                 })
-              } else if(this.futureTemp < item.suit.split('-')[0] && this.futureTemp > item.min_temp){
+              } else if (this.futureTemp < item.suit.split('-')[0] && this.futureTemp > item.min_temp) {
                 this.list.push({
                   'period': item.period,
                   'suit': '较适宜，温度偏低',
                   'suggest': '可以升温'
                 })
-              } else if(this.futureTemp > item.suit.split('-')[1] && this.futureTemp < item.max_temp){
+              } else if (this.futureTemp > item.suit.split('-')[1] && this.futureTemp < item.max_temp) {
                 this.list.push({
                   'period': item.period,
                   'suit': '较适宜，温度偏高',
@@ -97,7 +97,7 @@
             console.log(this.list)
           }
         })
-      },
+      }
       // getWheat() {
       //   axios.get('http://localhost:3000/wheats').then(res => {
       //     if (res.status === 200) {
