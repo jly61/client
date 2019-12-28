@@ -11,6 +11,8 @@
         </el-option>
       </el-select>
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
+      <el-button class="btn" @click="querySeven()">未来24小时</el-button>
+      <el-button class="btn" @click="querySeven()">未来24-48小时</el-button>
     </div>
     <!--Echart图表-->
     <div id="chart" class="chart"></div>
@@ -63,11 +65,12 @@
       // 获取站点信息
       getStation() {
         axios.get('http://localhost:3000/stations').then((res) => {
-          const resList = res.data.result
-          resList.forEach((item) => {
-            this.stationList.push(item.Station_name)
-          })
-          console.log(this.stationList)
+          if (res.status === 200) {
+            const resList = res.data.result
+            resList.forEach((item) => {
+              this.stationList.push(item.Station_name)
+            })
+          }
         })
       },
       queryWea() {
@@ -83,14 +86,15 @@
         console.log(param)
         axios.get('http://localhost:3000/stations/hourWea', { params: param }).then(res => {
           this.currentStation = this.value
-          const arr = res.data.result
-          console.log(arr)
-          arr.forEach((item) => {
-            this.tempList.push(item.TEM)
-            this.tempMaxList.push(item.TEM_Max)
-            this.tempMinList.push(item.TEM_Min)
-          })
-          this.initChart()
+          if (res.status === 200) {
+            const arr = res.data.result
+            arr.forEach((item) => {
+              this.tempList.push(item.TEM)
+              this.tempMaxList.push(item.TEM_Max)
+              this.tempMinList.push(item.TEM_Min)
+            })
+            this.initChart()
+          }
         })
       },
       // 初始化图表

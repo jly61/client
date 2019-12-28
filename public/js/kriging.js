@@ -474,7 +474,8 @@ var kriging = function() {
     function getColor(colors, z) {
       var l = colors.length;
       for (var i = 0; i < l; i++) {
-        if (z >= colors[i].min && z < colors[i].max) return colors[i].color;
+        if (z >= colors[i].min && z < colors[i].max)
+          return colors[i].color;
       }
     }
     // Starting boundaries

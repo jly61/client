@@ -27,7 +27,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '气象灾害监测系统', icon: 'dashboard' }
     }]
   },
 
@@ -176,30 +176,30 @@ export const constantRoutes = [
     ]
   },
 
-  // {
-  //   path: '/map',
-  //   component: Layout,
-  //   redirect: '/map/tempday',
-  //   name: 'Map',
-  //   meta: {
-  //     title: '农业气象灾害',
-  //     icon: 'nested'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'rain',
-  //       name: 'rain',
-  //       component: () => import('@/views/map/temp'),
-  //       meta: { title: '暴雨', icon: 'form' }
-  //     },
-  //     {
-  //       path: 'rainday',
-  //       name: 'rainday',
-  //       component: () => import('@/views/map/rain'),
-  //       meta: { title: '高温', icon: 'form' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/map',
+    component: Layout,
+    redirect: '/map/tempday',
+    name: 'Map',
+    meta: {
+      title: '农业气象灾害',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'rain',
+        name: 'rain',
+        component: () => import('@/views/map/temp'),
+        meta: { title: '暴雨', icon: 'form' }
+      },
+      {
+        path: 'rainday',
+        name: 'rainday',
+        component: () => import('@/views/map/rain'),
+        meta: { title: '高温', icon: 'form' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

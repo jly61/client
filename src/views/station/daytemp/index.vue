@@ -11,8 +11,7 @@
         </el-option>
       </el-select>
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea()">查询</el-button>
-      <el-button class="btn" @click="querySeven()">未来7天</el-button>
-
+      <el-button class="btn" @click="querySeven()">未来5天</el-button>
     </div>
     <!--Echart图表-->
     <div id="chart" class="chart"></div>
@@ -71,10 +70,7 @@
       // 获取站点天气
       queryWea() {
         this.tempList = []
-        this.tempMaxList = []
-        this.tempMinList = []
         this.dateList = []
-        console.log(this.tempMinList)
         const param = {
           'stationName': this.value,
           'startMonth': this.date.startMonth,
@@ -82,16 +78,16 @@
           'endMonth': this.date.endMonth,
           'endDay': this.date.endDay
         }
-        console.log(param)
         axios.get('http://localhost:3000/stations/dayWea', { params: param }).then(res => {
-          this.currentStation = this.value
-          const arr = res.data.result
-          console.log(arr)
-          arr.forEach((item) => {
-            this.tempList.push(item.avgTemp.toFixed(2))
-            this.dateList.push(item._id)
-          })
-          this.initChart('one')
+          if (res.status === 200) {
+            this.currentStation = this.value
+            const arr = res.data.result
+            arr.forEach((item) => {
+              this.tempList.push(item.avgTemp.toFixed(2))
+              this.dateList.push(item._id)
+            })
+            this.initChart('one')
+          }
         })
       },
 
@@ -105,19 +101,23 @@
         }
         console.log(param)
         axios.get('http://localhost:3000/citys', { params: param }).then(res => {
-          this.cityId = res.data.result[0].city_id
-          axios.get(`/weather/${this.cityId}`).then(res => {
-            this.currentStation = this.value
-            const arr = res.data.data.forecast.slice(0, 7)
-            console.log(arr)
-            arr.forEach((item, index) => {
-              this.tempMaxList.push(item.high.replace(/[^0-9]/ig, ''))
-              this.tempMinList.push(item.low.replace(/[^0-9]/ig, ''))
-              this.dateList.push(`${item.ymd.split('-')[1]}-${item.ymd.split('-')[2]}`)
+          if (res.status === 200) {
+            this.cityId = res.data.result[0].city_id
+            axios.get(`/weather/${this.cityId}`).then(res => {
+              if (res.status === 200) {
+                this.currentStation = this.value
+                const arr = res.data.data.forecast.slice(0, 7)
+                console.log(arr)
+                arr.forEach((item, index) => {
+                  this.tempMaxList.push(item.high.replace(/[^0-9]/ig, ''))
+                  this.tempMinList.push(item.low.replace(/[^0-9]/ig, ''))
+                  this.dateList.push(`${item.ymd.split('-')[1]}-${item.ymd.split('-')[2]}`)
+                })
+                console.log(this.dateList)
+                this.initChart('seven')
+              }
             })
-            console.log(this.dateList)
-            this.initChart('seven')
-          })
+          }
         })
       },
       // 初始化图表

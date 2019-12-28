@@ -1,6 +1,6 @@
 <template>
   <div class="tab-container">
-    <h3>明日平均气温:
+    <h3>{{stationName}}明日平均气温:
       <span>{{tomorrowTemp}}&#8451;</span>
     </h3>
     <el-row>
@@ -35,8 +35,8 @@
         createdTimes: 0,
         lon: '100.18',
         lat: '29.03',
-        stationName: '稻城',
-        tomorrowTemp: '25'
+        stationName: '金川',
+        tomorrowTemp: '15'
       }
     },
     watch: {

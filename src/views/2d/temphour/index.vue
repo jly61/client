@@ -30,7 +30,9 @@ import kriging from '@sakitam-gis/kriging'
 import '@/styles/hour.css'
 import DateSelect from '@/components/Dateselect'
 import { formatDate } from '@/utils/util'
+const baseMaps = [
 
+]
 export default {
   name: 'Index',
   components: {

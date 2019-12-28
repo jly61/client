@@ -33,8 +33,8 @@
         cornList: [],
         lon: '100.18',
         lat: '29.03',
-        stationName: '稻城',
-        futureTemp: '24'
+        stationName: '金川',
+        futureTemp: '15'
       }
     },
     mounted() {

@@ -11,6 +11,7 @@
         </el-option>
       </el-select>
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
+      <el-button class="btn" @click="querySeven()">未来5天</el-button>
     </div>
     <!--Echart图表-->
     <div id="rain-chart" class="chart"></div>

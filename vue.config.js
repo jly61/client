@@ -59,6 +59,13 @@ module.exports = {
         pathRewrite: {
           '^/caiyun': ''
         },
+      },
+      '/hefeng': {
+        target: 'https://free-api.heweather.net',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/hefeng': ''
+        },
       }
     },
     after: require('./mock/mock-server.js')
