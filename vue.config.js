@@ -46,27 +46,13 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
-      '/weather': {
-        target: 'http://t.weather.sojson.com/api/weather/city',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/weather': ''
-        },
-      },
       '/caiyun': {
-        target: 'https://api.caiyunapp.com/v2/TAkhjf8d1nlSlspN',
+        target: 'https://api.caiyunapp.com/v2/mDY7pYLfwDHKFyEO',
         changeOrigin: true,
         pathRewrite: {
           '^/caiyun': ''
         },
       },
-      '/hefeng': {
-        target: 'https://free-api.heweather.net',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/hefeng': ''
-        },
-      }
     },
     after: require('./mock/mock-server.js')
   },

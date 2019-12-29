@@ -11,8 +11,8 @@
         </el-option>
       </el-select>
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
-      <el-button class="btn" @click="querySeven()">未来24小时</el-button>
-      <el-button class="btn" @click="querySeven()">未来24-48小时</el-button>
+      <el-button class="btn" @click="queryFutureTemp(24)">未来24小时</el-button>
+      <el-button class="btn" @click="queryFutureTemp(48)">未来24-48小时</el-button>
     </div>
     <!--Echart图表-->
     <div id="chart" class="chart"></div>
@@ -40,6 +40,8 @@
         day: 27,
         value: '金川',
         currentStation: '金川',
+        lon: 102.04,
+        lat: 31.29,
         stationList: [],
         tempList: [],
         tempMaxList: [], // 每小时最高温度
@@ -49,6 +51,8 @@
     mounted() {
       if (this.$route.query.stationName !== undefined) {
         this.value = this.$route.query.stationName
+        this.lon = this.$route.query.lon
+        this.lat = this.$route.query.lat
       }
       console.log(this.value)
       this.getStation()
@@ -85,6 +89,7 @@
         }
         console.log(param)
         axios.get('http://localhost:3000/stations/hourWea', { params: param }).then(res => {
+          console.log(res)
           this.currentStation = this.value
           if (res.status === 200) {
             const arr = res.data.result
@@ -97,6 +102,40 @@
           }
         })
       },
+      // 查询单站点未来24小时、48小时天气
+      queryFutureTemp(time) {
+        this.tempList = []
+        this.tempMaxList = []
+        this.tempMinList = []
+
+        const param = {
+          'stationName': this.value,
+        }
+        axios.get('http://localhost:3000/stations/info', { params: param }).then(res => {
+          const result = res.data.result
+          const lon = result.lon
+          const lat = result.lat
+          this.currentStation = this.value
+          axios.get(`/caiyun/${lon},${lat}/hourly.json`, { params: param }).then(res => {
+            if (res.status === 200) {
+              const arr = res.data.result.hourly.temperature
+              let i;
+              if(time === 48) {
+                i = 24
+              } else {
+                i = 0
+              }
+              for (i; i < time; i++ ) {
+                this.tempList.push(arr[i].value)
+              }
+
+              console.log(this.tempList)
+              this.initChart()
+            }
+          })
+        })
+      },
+
       // 初始化图表
       initChart() {
         // 获取站点每小时气温，图表
