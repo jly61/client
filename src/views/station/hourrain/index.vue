@@ -9,8 +9,8 @@
         <el-option v-for="(station, index) in stationList" v-if="stationList.length > 0" :value="station">{{ station }}</el-option>
       </el-select>
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
-      <el-button class="btn" @click="querySeven()">未来24小时</el-button>
-      <el-button class="btn" @click="querySeven()">未来24-48小时</el-button>
+      <el-button class="btn" @click="queryFutureRain(24)">未来24小时</el-button>
+      <el-button class="btn" @click="queryFutureRain(48)">未来24-48小时</el-button>
     </div>
     <!--Echart图表-->
     <div id="rain-chart" class="chart"></div>
@@ -69,9 +69,6 @@
         })
       },
       queryWea() {
-        this.tempList = []
-        this.tempMaxList = []
-        this.tempMinList = []
         this.rainList = []
 
         const param = {
@@ -86,10 +83,38 @@
           console.log(arr)
           arr.forEach((item) => {
             this.rainList.push(item.PRE_1h)
-            this.tempMaxList.push(item.TEM_Max)
-            this.tempMinList.push(item.TEM_Min)
           })
           this.initChart()
+        })
+      },
+      // 查询单站点未来24小时、48小时天气
+      queryFutureRain(time) {
+        this.rainList = []
+        const param = {
+          'stationName': this.value,
+        }
+        axios.get('http://localhost:3000/stations/info', { params: param }).then(res => {
+          const result = res.data.result
+          const lon = result.lon
+          const lat = result.lat
+          this.currentStation = this.value
+          axios.get(`/caiyun/${lon},${lat}/hourly.json`, { params: param }).then(res => {
+            if (res.status === 200) {
+              const arr = res.data.result.hourly.precipitation
+              let i;
+              if(time === 48) {
+                i = 24
+              } else {
+                i = 0
+              }
+              for (i; i < time; i++ ) {
+                this.rainList.push(arr[i].value)
+              }
+
+              console.log(this.rainList)
+              this.initChart()
+            }
+          })
         })
       },
       // 初始化图表

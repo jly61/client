@@ -11,7 +11,7 @@
         </el-option>
       </el-select>
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea()">查询</el-button>
-      <el-button class="btn" @click="querySeven()">未来5天</el-button>
+      <el-button class="btn" @click="queryFutureTemp(5)">未来5天</el-button>
     </div>
     <!--Echart图表-->
     <div id="chart" class="chart"></div>
@@ -91,33 +91,34 @@
         })
       },
 
-      querySeven() {
+      // 查询单站点未来24小时、48小时天气
+      queryFutureTemp(time) {
         this.tempList = []
         this.tempMaxList = []
         this.tempMinList = []
-        this.dateList = []
+
         const param = {
-          'cityName': this.value
+          'stationName': this.value,
         }
-        console.log(param)
-        axios.get('http://localhost:3000/citys', { params: param }).then(res => {
-          if (res.status === 200) {
-            this.cityId = res.data.result[0].city_id
-            axios.get(`/weather/${this.cityId}`).then(res => {
-              if (res.status === 200) {
-                this.currentStation = this.value
-                const arr = res.data.data.forecast.slice(0, 7)
-                console.log(arr)
-                arr.forEach((item, index) => {
-                  this.tempMaxList.push(item.high.replace(/[^0-9]/ig, ''))
-                  this.tempMinList.push(item.low.replace(/[^0-9]/ig, ''))
-                  this.dateList.push(`${item.ymd.split('-')[1]}-${item.ymd.split('-')[2]}`)
-                })
-                console.log(this.dateList)
-                this.initChart('seven')
+        axios.get('http://localhost:3000/stations/info', { params: param }).then(res => {
+          const result = res.data.result
+          const lon = result.lon
+          const lat = result.lat
+          this.currentStation = this.value
+          axios.get(`/caiyun/${lon},${lat}/daily.json`, { params: param }).then(res => {
+            if (res.status === 200) {
+              const arr = res.data.result.daily.temperature
+              for (let i = 0; i < time; i++ ) {
+                this.tempList.push(arr[i].avg)
+                this.tempMaxList.push(arr[i].max)
+                this.tempMinList.push(arr[i].min)
               }
-            })
-          }
+              console.log(this.tempList)
+              console.log(this.tempMaxList)
+              console.log(this.tempMinList)
+              this.initChart()
+            }
+          })
         })
       },
       // 初始化图表
@@ -189,7 +190,7 @@
               trigger: 'axis'
             },
             legend: {
-              data: ['日最高气温', '日最低气温']
+              data: ['日最高气温', '日平均气温', '日最低气温']
             },
             toolbox: {
               show: true,
@@ -227,9 +228,20 @@
                 }
               },
               {
+                name: '日平均气温',
+                type: 'line',
+                data: this.tempList
+              },
+              {
                 name: '日最低气温',
                 type: 'line',
-                data: this.tempMinList
+                data: this.tempMinList,
+                markPoint: {
+                  data: [
+                    { type: 'max', name: '最大值' },
+                    { type: 'min', name: '最小值' }
+                  ]
+                }
               }
             ]
           })

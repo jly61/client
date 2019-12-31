@@ -11,7 +11,7 @@
         </el-option>
       </el-select>
       <el-button class="btn" type="primary" icon="el-icon-search" @click="queryWea">查询</el-button>
-      <el-button class="btn" @click="querySeven()">未来5天</el-button>
+      <el-button class="btn" @click="queryFutureTemp(5)">未来5天</el-button>
     </div>
     <!--Echart图表-->
     <div id="rain-chart" class="chart"></div>
@@ -88,6 +88,30 @@
             this.dateList.push(item._id)
           })
           this.initChart()
+        })
+      },
+      // 查询单站点未来24小时、48小时天气
+      queryFutureTemp(time) {
+        this.rainList = []
+
+        const param = {
+          'stationName': this.value,
+        }
+        axios.get('http://localhost:3000/stations/info', { params: param }).then(res => {
+          const result = res.data.result
+          const lon = result.lon
+          const lat = result.lat
+          this.currentStation = this.value
+          axios.get(`/caiyun/${lon},${lat}/daily.json`, { params: param }).then(res => {
+            console.log(res)
+            if (res.status === 200) {
+              const arr = res.data.result.daily.precipitation
+              for (let i = 0; i < time; i++ ) {
+                this.rainList.push(arr[i].avg)
+              }
+              this.initChart()
+            }
+          })
         })
       },
       // 初始化图表

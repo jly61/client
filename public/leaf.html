@@ -538,7 +538,7 @@
                 }
 
                 function toDayRain() {
-                  window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}&lon=${x[i]}&y=${lat[i]}`
+                  window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}&lon=${x[i]}&lat=${y[i]}`
                 }
 
                 function toForecast() {
@@ -1207,7 +1207,7 @@
   }
 
   // 霜冻预警
-  function frostFour(time) {
+  function frostWarning(time) {
     const param = {
       month: 6,
       day: 28,
@@ -1885,10 +1885,10 @@
   const frost24 = document.querySelector('.frost24')
   const frost48 = document.querySelector('.frost48')
   frost24.onclick = function() {
-    frostFour(24)
+    frostWarning(24)
   }
   frost48.onclick = function() {
-    frostFour(48)
+    frostWarning(48)
   }
   temp24.onclick = function() {
     tempFour(48)
