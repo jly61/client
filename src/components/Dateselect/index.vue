@@ -19,35 +19,35 @@
 </template>
 
 <script>
-export default {
-  name: 'DateSelect',
-  props: {
-    pickerType: {
-      type: Number,
-    }
-  },
-  data() {
-    return {
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now()
-        }
-      },
-      value: new Date(),
-      value2: ''
-
-    }
-  },
-  watch: {
-    value() {
-      this.$emit('sendDate', this.value)
+  export default {
+    name: 'DateSelect',
+    props: {
+      pickerType: {
+        type: Number,
+      }
     },
-    value2() {
-      console.log(this.value2)
-      this.$emit('sendDate', this.value2)
+    data() {
+      return {
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now()
+          }
+        },
+        value: new Date(),
+        value2: ''
+
+      }
+    },
+    watch: {
+      value() {
+        this.$emit('sendDate', this.value)
+      },
+      value2() {
+        console.log(this.value2)
+        this.$emit('sendDate', this.value2)
+      }
     }
   }
-}
 </script>
 
 <style scoped>

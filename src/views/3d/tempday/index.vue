@@ -49,9 +49,7 @@
           'esri/layers/support/LabelClass',
           'esri/widgets/Legend'
         ], options)
-          .then(([
-                   Map, SceneView, FeatureLayer, Point, Polygon, LabelClass, Legend
-                 ]) => {
+          .then(([Map, SceneView, FeatureLayer, Point, Polygon, LabelClass, Legend]) => {
             const fields = [
               {
                 name: 'ObjectID',
@@ -145,8 +143,6 @@
               month: month,
               day: day
             }
-            console.log(this.month, this.day)
-            const _this = this
 
             axios.get('http://localhost:3000/weathers/dayTemp', { params: param }).then((tempRes) => {
               const hourTempArr = tempRes.data.result
@@ -166,7 +162,6 @@
                   }
                 })
               })
-              console.log(graphics)
               const featureLayer = new FeatureLayer({
                 source: graphics,
                 fields: fields,
@@ -199,12 +194,12 @@
               })
               const initCam = {
                 position: {
-                  x: 108,
-                  y: 30,
-                  z: 332780
+                  x: 104,
+                  y: 23,
+                  z: 2000000
                 },
                 heading: 358.8,
-                tilt: 13.7
+                tilt: 20
               }
               const view = new SceneView({
                 map: map,

@@ -6,7 +6,8 @@
       <!--日历-->
       <date-select :picker-type="1" class="btn date-picker" @sendDate="showChild"/>
       <el-select v-model="value" class="btn" placeholder="选择站点" @click="getValue($event)">
-        <el-option v-for="(station, index) in stationList" v-if="stationList.length > 0" :value="station">{{ station
+        <el-option v-if="stationList.length > 0" v-for="(station, index) in stationList" :value="station" :key="index">
+          {{ station
           }}
         </el-option>
       </el-select>
@@ -23,7 +24,7 @@
   import axios from 'axios'
   import DateSelect from '@/components/Dateselect' // 引入日历组件
   import echarts from 'echarts'
-  import { formatDate } from '@/utils/util'
+  import {formatDate} from '@/utils/util'
 
   export default {
     name: 'StationQuery',
@@ -88,7 +89,7 @@
           'day': this.day
         }
         console.log(param)
-        axios.get('http://localhost:3000/stations/hourWea', { params: param }).then(res => {
+        axios.get('http://localhost:3000/stations/hourWea', {params: param}).then(res => {
           console.log(res)
           this.currentStation = this.value
           if (res.status === 200) {
@@ -109,27 +110,25 @@
         this.tempMinList = []
 
         const param = {
-          'stationName': this.value,
+          'stationName': this.value
         }
-        axios.get('http://localhost:3000/stations/info', { params: param }).then(res => {
+        axios.get('http://localhost:3000/stations/info', {params: param}).then(res => {
           const result = res.data.result
           const lon = result.lon
           const lat = result.lat
           this.currentStation = this.value
-          axios.get(`/caiyun/${lon},${lat}/hourly.json`, { params: param }).then(res => {
+          axios.get(`/caiyun/${lon},${lat}/hourly.json`, {params: param}).then(res => {
             if (res.status === 200) {
               const arr = res.data.result.hourly.temperature
-              let i;
-              if(time === 48) {
+              let i
+              if (time === 48) {
                 i = 24
               } else {
                 i = 0
               }
-              for (i; i < time; i++ ) {
+              for (i; i < time; i++) {
                 this.tempList.push(arr[i].value)
               }
-
-              console.log(this.tempList)
               this.initChart()
             }
           })
@@ -159,8 +158,8 @@
               dataZoom: {
                 yAxisIndex: 'none'
               },
-              dataView: { readOnly: false },
-              magicType: { type: ['line', 'bar'] },
+              dataView: {readOnly: false},
+              magicType: {type: ['line', 'bar']},
               restore: {},
               saveAsImage: {}
             }
@@ -169,6 +168,7 @@
             type: 'category',
             boundaryGap: false,
             data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+            // data: this.timeList
           },
           yAxis: {
             type: 'value',
@@ -183,13 +183,13 @@
               data: this.tempMaxList,
               markPoint: {
                 data: [
-                  { type: 'max', name: '最大值' },
-                  { type: 'min', name: '最小值' }
+                  {type: 'max', name: '最大值'},
+                  {type: 'min', name: '最小值'}
                 ]
               },
               markLine: {
                 data: [
-                  { type: 'average', name: '平均值' }
+                  {type: 'average', name: '平均值'}
                 ]
               }
             },
@@ -199,13 +199,13 @@
               data: this.tempList,
               markPoint: {
                 data: [
-                  { type: 'max', name: '最大值' },
-                  { type: 'min', name: '最小值' }
+                  {type: 'max', name: '最大值'},
+                  {type: 'min', name: '最小值'}
                 ]
               },
               markLine: {
                 data: [
-                  { type: 'average', name: '平均值' }
+                  {type: 'average', name: '平均值'}
                 ]
               }
             },
@@ -215,12 +215,12 @@
               data: this.tempMinList,
               markPoint: {
                 data: [
-                  { name: '周最低', value: -2, xAxis: 1, yAxis: -1.5 }
+                  {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
                 ]
               },
               markLine: {
                 data: [
-                  { type: 'average', name: '平均值' },
+                  {type: 'average', name: '平均值'},
                   [{
                     symbol: 'none',
                     x: '90%',

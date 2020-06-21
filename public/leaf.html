@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>leaflet克里金空间插值</title>
+  <title>GIS气象</title>
   <style>
     html, body {
       /*position: relative;*/
@@ -273,14 +273,13 @@
       bottom: 50px;
     }
   </style>
-  <script src="https://cdn.bootcss.com/echarts/4.2.1/echarts.min.js"></script>
+<!--  <script src="https://cdn.bootcss.com/echarts/4.2.1/echarts.min.js"></script>-->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>
   <script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/esri-leaflet@2.2.4/dist/esri-leaflet.js"></script>
+<!--  <script src="https://unpkg.com/esri-leaflet@2.2.4/dist/esri-leaflet.js"></script>-->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="js/kriging.js"></script>
-  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
   <script src="js/world.js"></script>
   <link rel="stylesheet" href="style/iconfont.css">
   <!--    侧边栏-->
@@ -338,7 +337,6 @@
     <button class="btn hour-rain">小时降雨量序列</button>
     <button class="btn day-temp">日平均气温序列</button>
     <button class="btn day-rain">日总降雨量序列</button>
-    <button class="forecast">农业特色预报</button>
   </div>
 </div>
 <div class="header">
@@ -391,6 +389,7 @@
         <li class="temp-btn">气温</li>
         <li class="rain-btn">降水</li>
         <li class="humidity-btn">相对湿度</li>
+<!--        <li class="prs-btn">气压</li>-->
       </ul>
     </li>
   </ul>
@@ -465,7 +464,7 @@
 
     axios.get('http://localhost:3000/weathers/kri-hour', { params: param }).then(res => {
       points = res.data.result
-      document.querySelector('.station-date').innerText = `2019年${param.month}月${param.day}日${param.hour}时`
+      document.querySelector('.station-date').innerText = `2020年6月10日22时`
 
       axios.post('http://localhost:3000/caiyun/hour', { points: points }).then(res => {
         console.log(res)
@@ -495,10 +494,6 @@
             className: 'icon-red'
           })
           for (let i = 0; i < n; i++) {
-            // t.push(parseFloat(points[i].TEM))
-            // r.push(parseFloat(points[i].PRE_1h))
-            // prs.push(parseFloat(points[i].PRS))
-            // rhu.push(parseFloat(points[i].RHU))
             x.push(parseFloat(points[i].docs[0].lon))  // lon
             y.push(parseFloat(points[i].docs[0].lat))  // lat
             stationName.push(points[i].docs[0].Station_name)
@@ -523,33 +518,27 @@
                 const hourRain = document.querySelector('.hour-rain')
                 const dayTemp = document.querySelector('.day-temp')
                 const dayRain = document.querySelector('.day-rain')
-                const forecast = document.querySelector('.forecast')
 
                 function toHourTemp() {
-                  window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}&lon=${x[i]}&y=${lat[i]}`
+                  window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}&lon=${x[i]}&y=${y[i]}`
                 }
 
                 function toHourRain() {
-                  window.location.href = `http://localhost:9528/#/station/hourrain?stationName=${stationName[i]}&lon=${x[i]}&y=${lat[i]}`
+                  window.location.href = `http://localhost:9528/#/station/hourrain?stationName=${stationName[i]}&lon=${x[i]}&y=${y[i]}`
                 }
 
                 function toDayTemp() {
-                  window.location.href = `http://localhost:9528/#/station/daytemp?stationName=${stationName[i]}&lon=${x[i]}&y=${lat[i]}`
+                  window.location.href = `http://localhost:9528/#/station/daytemp?stationName=${stationName[i]}&lon=${x[i]}&y=${y[i]}`
                 }
 
                 function toDayRain() {
                   window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}&lon=${x[i]}&lat=${y[i]}`
                 }
 
-                function toForecast() {
-                  window.location.href = `http://localhost:9528/#/forecast/index?stationName=${stationName[i]}&lon=${x[i]}&lat=${y[i]}`
-                }
-
                 hourTemp.addEventListener('click', toHourTemp)
                 hourRain.addEventListener('click', toHourRain)
                 dayTemp.addEventListener('click', toDayTemp)
                 dayRain.addEventListener('click', toDayRain)
-                forecast.addEventListener('click', toForecast)
 
               }).on('mouseover', function(e) {
                 e.target.options.className = 'icon-hover'
@@ -576,7 +565,6 @@
                 const hourRain = document.querySelector('.hour-rain')
                 const dayTemp = document.querySelector('.day-temp')
                 const dayRain = document.querySelector('.day-rain')
-                const forecast = document.querySelector('.forecast')
 
                 function toHourTemp() {
                   window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}`
@@ -594,16 +582,10 @@
                   window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}`
                 }
 
-                function toForecast() {
-                  window.location.href = `http://localhost:9528/#/forecast/index?stationName=${stationName[i]}&lon=${x[i]}&lat=${y[i]}`
-                }
-
                 hourTemp.addEventListener('click', toHourTemp)
                 hourRain.addEventListener('click', toHourRain)
                 dayTemp.addEventListener('click', toDayTemp)
                 dayRain.addEventListener('click', toDayRain)
-                forecast.addEventListener('click', toForecast)
-
               }).on('mouseover', function(e) {
                 e.target.options.className = 'icon-hover'
                 this.bindPopup(`${stationName[i]}:${t[i]}&#8451`).openPopup()
@@ -1032,179 +1014,179 @@
     })
   }
 
-  function loadPressure() {
-    const param = {
-      month: 7,
-      day: 1,
-      hour: 1
-    }
-    //移除除底图外的所有图层
-    map.eachLayer(function(layer) {
-      if (!layer._container || ('' + $(layer._container).attr('class')).replace(/\s/g, '') !== 'leaflet-layer') {
-        layer.remove()
-      }
-    })
-    for (var key in map.boxZoom._map._layers) {
-      delete map.boxZoom._map._layers[key]
-    }
-    axios.get('http://localhost:3000/weathers/kri-hour', { params: param }).then(res => {
-      points = res.data.result
-
-      function loadkriging() {
-        const canvas = document.getElementById('canvasMap')
-        canvas.width = 1000
-        canvas.height = 1000
-        const n = points.length
-        let t = [] // 温度
-        let x = [] // 经度
-        let y = [] // 纬度
-        let r = [] // 降雨
-        let prs = [] //气压  pressure
-        let rhu = [] //相对湿度  relative humidity
-        let stationId = []  // 站点号
-        let stationName = [] // 站点名
-        let observe_alt = [] // 观测场海拔
-        const myIcon = L.divIcon({
-          className: 'icon'
-        })
-        const redIcon = L.divIcon({
-          className: 'icon-red'
-        })
-        for (let i = 0; i < n; i++) {
-          t.push(parseFloat(points[i].TEM))
-          r.push(parseFloat(points[i].PRE_1h))
-          prs.push(parseFloat(points[i].PRS))
-          rhu.push(parseFloat(points[i].RHU))
-          x.push(parseFloat(points[i].docs[0].lon))  // lon
-          y.push(parseFloat(points[i].docs[0].lat))  // lat
-          stationName.push(points[i].docs[0].Station_name)
-          stationId.push(points[i].docs[0].Station_Id_C)
-          observe_alt.push(points[i].docs[0].Observe_alt)
-          // L.circle([y[i], x[i]], {radius: 1}).addTo(map);
-          if (points[i].PRE_1h < 16) {
-            L.marker([y[i], x[i]], { icon: myIcon }).addTo(map).on('click', function(e) {
-              let point = formatPoint(y[i], x[i])
-              document.querySelector('.station-name').innerHTML = stationName[i]
-              document.querySelector('.station-id').innerHTML = stationId[i]
-              document.querySelector('.station-lon').innerHTML = point[1]
-              document.querySelector('.station-lat').innerHTML = point[0]
-              document.querySelector('.observe-alt').innerHTML = `${observe_alt[i]}m`
-              document.querySelector('.temp').innerHTML = t[i] + '&#8451'
-              document.querySelector('.rain').innerHTML = r[i] + 'mm'
-              sidebar.show()
-              // 侧边栏跳转
-              const hourTemp = document.querySelector('.hour-temp')
-              const hourRain = document.querySelector('.hour-rain')
-              const dayTemp = document.querySelector('.day-temp')
-              const dayRain = document.querySelector('.day-rain')
-
-              function toHourTemp() {
-                window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}`
-              }
-
-              function toHourRain() {
-                window.location.href = `http://localhost:9528/#/station/hourrain?stationName=${stationName[i]}`
-              }
-
-              function toDayTemp() {
-                window.location.href = `http://localhost:9528/#/station/daytemp?stationName=${stationName[i]}`
-              }
-
-              function toDayRain() {
-                window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}`
-              }
-
-              hourTemp.addEventListener('click', toHourTemp)
-              hourRain.addEventListener('click', toHourRain)
-              dayTemp.addEventListener('click', toDayTemp)
-              dayRain.addEventListener('click', toDayRain)
-            }).on('mouseover', function(e) {
-              e.target.options.className = 'icon-hover'
-              this.bindPopup(`${stationName[i]}:${rhu[i]}%`).openPopup()
-            }).on('mouseout', function() {
-              this.closePopup()
-            })
-          } else {
-            L.marker([y[i], x[i]], { icon: redIcon, highlight: 'permanent' }).addTo(map).on('click', function(e) {
-              let point = formatPoint(y[i], x[i])
-              document.querySelector('.station-name').innerHTML = `气象站名：${stationName[i]}`
-              document.querySelector('.station-id').innerHTML = stationId[i]
-              document.querySelector('.station-lon').innerHTML = point[1]
-              document.querySelector('.station-lat').innerHTML = point[0]
-              document.querySelector('.observe-alt').innerHTML = `${observe_alt[i]}m`
-              document.querySelector('.temp').innerHTML = t[i] + '&#8451'
-              document.querySelector('.rain').innerHTML = r[i] + 'mm'
-              document.querySelector('.rhu').innerHTML = rhu[i] + '%'
-              document.querySelector('.prs').innerHTML = prs[i] + 'hpa'
-              sidebar.show()
-            }).on('mouseover', function(e) {
-              e.target.options.className = 'icon-hover'
-              this.bindPopup(`${stationName[i]}:${r[i]}mm`).openPopup()
-            }).on('mouseout', function() {
-              this.closePopup()
-            })
-          }
-
-        }
-
-        // 根据属性范围设置渲染颜色
-        // function getColor(d) {
-        //     return d > 1000 ? '#800026' :
-        //         d > 500 ? '#BD0026' :
-        //             d > 200 ? '#E31A1C' :
-        //                 d > 100 ? '#FC4E2A' :
-        //                     d > 50 ? '#FD8D3C' :
-        //                         d > 20 ? '#FEB24C' :
-        //                             d > 10 ? '#FED976' :
-        //                                 '#FFEDA0';
-        // }
-        // //图例
-        // var legend = L.control({position:'bottomright'});
-        //
-        // legend.onAdd = function(map){
-        //     var div = L.DomUtil.create('div','info legend'),
-        //         grades = [0,10,20,50,100,200,500,1000],
-        //         labels=[];
-        //     for(var i=0;i<grades.length;i++){
-        //         div.innerHTML +=
-        //             '<i style="background:'+getColor(grades[i]+1)+'"></i>'+
-        //             grades[i]+(grades[i+1] + 0.1?' &ndash; '+grades[i+1]+'<br>':'+');
-        //     }
-        //     return div;
-        // }
-        // legend.addTo(map);
-
-        let variogram = kriging.train(rhu, x, y, 'exponential', 0, 100)
-        const width = 0.05
-        let grid = kriging.grid(world, variogram, width)
-        // const colors = ['#00A600', '#01A600', '#03A700', '#04A700', '#05A800', '#07A800', '#08A900', '#09A900', '#0BAA00', '#0CAA00', '#0DAB00', '#0FAB00', '#10AC00', '#12AC00', '#13AD00', '#14AD00', '#16AE00', '#17AE00', '#19AF00', '#1AAF00', '#1CB000', '#1DB000', '#1FB100', '#20B100', '#22B200', '#23B200', '#25B300', '#26B300', '#28B400', '#29B400', '#2BB500', '#2CB500', '#2EB600', '#2FB600', '#31B700', '#33B700', '#34B800', '#36B800', '#37B900', '#39B900', '#3BBA00', '#3CBA00', '#3EBB00', '#3FBB00', '#41BC00', '#43BC00', '#44BD00', '#46BD00', '#48BE00', '#49BE00', '#4BBF00', '#4DBF00', '#4FC000', '#50C000', '#52C100', '#54C100', '#55C200', '#57C200', '#59C300', '#5BC300', '#5DC400', '#5EC400', '#60C500', '#62C500', '#64C600', '#66C600', '#67C700', '#69C700', '#6BC800', '#6DC800', '#6FC900', '#71C900', '#72CA00', '#74CA00', '#76CB00', '#78CB00', '#7ACC00', '#7CCC00', '#7ECD00', '#80CD00', '#82CE00', '#84CE00', '#86CF00', '#88CF00', '#8AD000', '#8BD000', '#8DD100', '#8FD100', '#91D200', '#93D200', '#95D300', '#97D300', '#9AD400', '#9CD400', '#9ED500', '#A0D500', '#A2D600', '#A4D600', '#A6D700', '#A8D700', '#AAD800', '#ACD800', '#AED900', '#B0D900', '#B2DA00', '#B5DA00', '#B7DB00', '#B9DB00', '#BBDC00', '#BDDC00', '#BFDD00', '#C2DD00', '#C4DE00', '#C6DE00', '#C8DF00', '#CADF00', '#CDE000', '#CFE000', '#D1E100', '#D3E100', '#D6E200', '#D8E200', '#DAE300', '#DCE300', '#DFE400', '#E1E400', '#E3E500', '#E6E600', '#E6E402', '#E6E204', '#E6E105', '#E6DF07', '#E6DD09', '#E6DC0B', '#E6DA0D', '#E6D90E', '#E6D710', '#E6D612', '#E7D414', '#E7D316', '#E7D217', '#E7D019', '#E7CF1B', '#E7CE1D', '#E7CD1F', '#E7CB21', '#E7CA22', '#E7C924', '#E8C826', '#E8C728', '#E8C62A', '#E8C52B', '#E8C42D', '#E8C32F', '#E8C231', '#E8C133', '#E8C035', '#E8BF36', '#E9BE38', '#E9BD3A', '#E9BC3C', '#E9BB3E', '#E9BB40', '#E9BA42', '#E9B943', '#E9B945', '#E9B847', '#E9B749', '#EAB74B', '#EAB64D', '#EAB64F', '#EAB550', '#EAB552', '#EAB454', '#EAB456', '#EAB358', '#EAB35A', '#EAB35C', '#EBB25D', '#EBB25F', '#EBB261', '#EBB263', '#EBB165', '#EBB167', '#EBB169', '#EBB16B', '#EBB16C', '#EBB16E', '#ECB170', '#ECB172', '#ECB174', '#ECB176', '#ECB178', '#ECB17A', '#ECB17C', '#ECB17E', '#ECB27F', '#ECB281', '#EDB283', '#EDB285', '#EDB387', '#EDB389', '#EDB38B', '#EDB48D', '#EDB48F', '#EDB591', '#EDB593', '#EDB694', '#EEB696', '#EEB798', '#EEB89A', '#EEB89C', '#EEB99E', '#EEBAA0', '#EEBAA2', '#EEBBA4', '#EEBCA6', '#EEBDA8', '#EFBEAA', '#EFBEAC', '#EFBFAD', '#EFC0AF', '#EFC1B1', '#EFC2B3', '#EFC3B5', '#EFC4B7', '#EFC5B9', '#EFC7BB', '#F0C8BD', '#F0C9BF', '#F0CAC1', '#F0CBC3', '#F0CDC5', '#F0CEC7', '#F0CFC9', '#F0D1CB', '#F0D2CD', '#F0D3CF', '#F1D5D1', '#F1D6D3', '#F1D8D5', '#F1D9D7', '#F1DBD8', '#F1DDDA', '#F1DEDC', '#F1E0DE', '#F1E2E0', '#F1E3E2', '#F2E5E4', '#F2E7E6', '#F2E9E8', '#F2EBEA', '#F2ECEC', '#F2EEEE', '#F2F0F0', '#F2F2F2']
-        const colors = [
-          { min: 0, max: 0, color: '#D50637' },
-          { min: 0, max: 10, color: '#E70000' },
-          { min: 10, max: 20, color: '#FC2603' },
-          { min: 20, max: 30, color: '#F74F14' },
-          { min: 30, max: 40, color: '#F9FAD5' },
-          { min: 40, max: 50, color: '#EEFDCA' },
-          { min: 50, max: 60, color: '#4349C9' },
-          { min: 60, max: 70, color: '#5440B6' },
-          { min: 70, max: 80, color: '#4621A4' },
-          { min: 80, max: 90, color: '#330D80' },
-          { min: 90, max: 100, color: '#080000' }
-        ]
-        kriging.plot(canvas, grid, [97.3481, 108.5467], [26.0459, 34.3129], colors)
-      }
-
-      function returnImgae() {
-        const mycanvas = document.getElementById('canvasMap')
-        return mycanvas.toDataURL('image/png')
-      }
-
-      loadkriging()
-
-      const imageBounds = [[26.0459, 97.3481], [34.3129, 108.5467]]
-      L.imageOverlay(returnImgae(), imageBounds, { opacity: 0.6 }).addTo(map)
-    })
-  }
+  // function loadPressure() {
+  //   const param = {
+  //     month: 7,
+  //     day: 1,
+  //     hour: 1
+  //   }
+  //   //移除除底图外的所有图层
+  //   map.eachLayer(function(layer) {
+  //     if (!layer._container || ('' + $(layer._container).attr('class')).replace(/\s/g, '') !== 'leaflet-layer') {
+  //       layer.remove()
+  //     }
+  //   })
+  //   for (var key in map.boxZoom._map._layers) {
+  //     delete map.boxZoom._map._layers[key]
+  //   }
+  //   axios.get('http://localhost:3000/weathers/kri-hour', { params: param }).then(res => {
+  //     points = res.data.result
+  //
+  //     function loadkriging() {
+  //       const canvas = document.getElementById('canvasMap')
+  //       canvas.width = 1000
+  //       canvas.height = 1000
+  //       const n = points.length
+  //       let t = [] // 温度
+  //       let x = [] // 经度
+  //       let y = [] // 纬度
+  //       let r = [] // 降雨
+  //       let prs = [] //气压  pressure
+  //       let rhu = [] //相对湿度  relative humidity
+  //       let stationId = []  // 站点号
+  //       let stationName = [] // 站点名
+  //       let observe_alt = [] // 观测场海拔
+  //       const myIcon = L.divIcon({
+  //         className: 'icon'
+  //       })
+  //       const redIcon = L.divIcon({
+  //         className: 'icon-red'
+  //       })
+  //       for (let i = 0; i < n; i++) {
+  //         t.push(parseFloat(points[i].TEM))
+  //         r.push(parseFloat(points[i].PRE_1h))
+  //         prs.push(parseFloat(points[i].PRS))
+  //         rhu.push(parseFloat(points[i].RHU))
+  //         x.push(parseFloat(points[i].docs[0].lon))  // lon
+  //         y.push(parseFloat(points[i].docs[0].lat))  // lat
+  //         stationName.push(points[i].docs[0].Station_name)
+  //         stationId.push(points[i].docs[0].Station_Id_C)
+  //         observe_alt.push(points[i].docs[0].Observe_alt)
+  //         // L.circle([y[i], x[i]], {radius: 1}).addTo(map);
+  //         if (points[i].PRE_1h < 16) {
+  //           L.marker([y[i], x[i]], { icon: myIcon }).addTo(map).on('click', function(e) {
+  //             let point = formatPoint(y[i], x[i])
+  //             document.querySelector('.station-name').innerHTML = stationName[i]
+  //             document.querySelector('.station-id').innerHTML = stationId[i]
+  //             document.querySelector('.station-lon').innerHTML = point[1]
+  //             document.querySelector('.station-lat').innerHTML = point[0]
+  //             document.querySelector('.observe-alt').innerHTML = `${observe_alt[i]}m`
+  //             document.querySelector('.temp').innerHTML = t[i] + '&#8451'
+  //             document.querySelector('.rain').innerHTML = r[i] + 'mm'
+  //             sidebar.show()
+  //             // 侧边栏跳转
+  //             const hourTemp = document.querySelector('.hour-temp')
+  //             const hourRain = document.querySelector('.hour-rain')
+  //             const dayTemp = document.querySelector('.day-temp')
+  //             const dayRain = document.querySelector('.day-rain')
+  //
+  //             function toHourTemp() {
+  //               window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}`
+  //             }
+  //
+  //             function toHourRain() {
+  //               window.location.href = `http://localhost:9528/#/station/hourrain?stationName=${stationName[i]}`
+  //             }
+  //
+  //             function toDayTemp() {
+  //               window.location.href = `http://localhost:9528/#/station/daytemp?stationName=${stationName[i]}`
+  //             }
+  //
+  //             function toDayRain() {
+  //               window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}`
+  //             }
+  //
+  //             hourTemp.addEventListener('click', toHourTemp)
+  //             hourRain.addEventListener('click', toHourRain)
+  //             dayTemp.addEventListener('click', toDayTemp)
+  //             dayRain.addEventListener('click', toDayRain)
+  //           }).on('mouseover', function(e) {
+  //             e.target.options.className = 'icon-hover'
+  //             this.bindPopup(`${stationName[i]}:${rhu[i]}%`).openPopup()
+  //           }).on('mouseout', function() {
+  //             this.closePopup()
+  //           })
+  //         } else {
+  //           L.marker([y[i], x[i]], { icon: redIcon, highlight: 'permanent' }).addTo(map).on('click', function(e) {
+  //             let point = formatPoint(y[i], x[i])
+  //             document.querySelector('.station-name').innerHTML = `气象站名：${stationName[i]}`
+  //             document.querySelector('.station-id').innerHTML = stationId[i]
+  //             document.querySelector('.station-lon').innerHTML = point[1]
+  //             document.querySelector('.station-lat').innerHTML = point[0]
+  //             document.querySelector('.observe-alt').innerHTML = `${observe_alt[i]}m`
+  //             document.querySelector('.temp').innerHTML = t[i] + '&#8451'
+  //             document.querySelector('.rain').innerHTML = r[i] + 'mm'
+  //             document.querySelector('.rhu').innerHTML = rhu[i] + '%'
+  //             document.querySelector('.prs').innerHTML = prs[i] + 'hpa'
+  //             sidebar.show()
+  //           }).on('mouseover', function(e) {
+  //             e.target.options.className = 'icon-hover'
+  //             this.bindPopup(`${stationName[i]}:${r[i]}mm`).openPopup()
+  //           }).on('mouseout', function() {
+  //             this.closePopup()
+  //           })
+  //         }
+  //
+  //       }
+  //
+  //       // 根据属性范围设置渲染颜色
+  //       function getColor(d) {
+  //           return d > 1000 ? '#800026' :
+  //               d > 500 ? '#BD0026' :
+  //                   d > 200 ? '#E31A1C' :
+  //                       d > 100 ? '#FC4E2A' :
+  //                           d > 50 ? '#FD8D3C' :
+  //                               d > 20 ? '#FEB24C' :
+  //                                   d > 10 ? '#FED976' :
+  //                                       '#FFEDA0';
+  //       }
+  //       //图例
+  //       var legend = L.control({position:'bottomright'});
+  //
+  //       legend.onAdd = function(map){
+  //           var div = L.DomUtil.create('div','info legend'),
+  //               grades = [0,10,20,50,100,200,500,1000],
+  //               labels=[];
+  //           for(var i=0;i<grades.length;i++){
+  //               div.innerHTML +=
+  //                   '<i style="background:'+getColor(grades[i]+1)+'"></i>'+
+  //                   grades[i]+(grades[i+1] + 0.1?' &ndash; '+grades[i+1]+'<br>':'+');
+  //           }
+  //           return div;
+  //       }
+  //       legend.addTo(map);
+  //
+  //       let variogram = kriging.train(rhu, x, y, 'exponential', 0, 100)
+  //       const width = 0.05
+  //       let grid = kriging.grid(world, variogram, width)
+  //       // const colors = ['#00A600', '#01A600', '#03A700', '#04A700', '#05A800', '#07A800', '#08A900', '#09A900', '#0BAA00', '#0CAA00', '#0DAB00', '#0FAB00', '#10AC00', '#12AC00', '#13AD00', '#14AD00', '#16AE00', '#17AE00', '#19AF00', '#1AAF00', '#1CB000', '#1DB000', '#1FB100', '#20B100', '#22B200', '#23B200', '#25B300', '#26B300', '#28B400', '#29B400', '#2BB500', '#2CB500', '#2EB600', '#2FB600', '#31B700', '#33B700', '#34B800', '#36B800', '#37B900', '#39B900', '#3BBA00', '#3CBA00', '#3EBB00', '#3FBB00', '#41BC00', '#43BC00', '#44BD00', '#46BD00', '#48BE00', '#49BE00', '#4BBF00', '#4DBF00', '#4FC000', '#50C000', '#52C100', '#54C100', '#55C200', '#57C200', '#59C300', '#5BC300', '#5DC400', '#5EC400', '#60C500', '#62C500', '#64C600', '#66C600', '#67C700', '#69C700', '#6BC800', '#6DC800', '#6FC900', '#71C900', '#72CA00', '#74CA00', '#76CB00', '#78CB00', '#7ACC00', '#7CCC00', '#7ECD00', '#80CD00', '#82CE00', '#84CE00', '#86CF00', '#88CF00', '#8AD000', '#8BD000', '#8DD100', '#8FD100', '#91D200', '#93D200', '#95D300', '#97D300', '#9AD400', '#9CD400', '#9ED500', '#A0D500', '#A2D600', '#A4D600', '#A6D700', '#A8D700', '#AAD800', '#ACD800', '#AED900', '#B0D900', '#B2DA00', '#B5DA00', '#B7DB00', '#B9DB00', '#BBDC00', '#BDDC00', '#BFDD00', '#C2DD00', '#C4DE00', '#C6DE00', '#C8DF00', '#CADF00', '#CDE000', '#CFE000', '#D1E100', '#D3E100', '#D6E200', '#D8E200', '#DAE300', '#DCE300', '#DFE400', '#E1E400', '#E3E500', '#E6E600', '#E6E402', '#E6E204', '#E6E105', '#E6DF07', '#E6DD09', '#E6DC0B', '#E6DA0D', '#E6D90E', '#E6D710', '#E6D612', '#E7D414', '#E7D316', '#E7D217', '#E7D019', '#E7CF1B', '#E7CE1D', '#E7CD1F', '#E7CB21', '#E7CA22', '#E7C924', '#E8C826', '#E8C728', '#E8C62A', '#E8C52B', '#E8C42D', '#E8C32F', '#E8C231', '#E8C133', '#E8C035', '#E8BF36', '#E9BE38', '#E9BD3A', '#E9BC3C', '#E9BB3E', '#E9BB40', '#E9BA42', '#E9B943', '#E9B945', '#E9B847', '#E9B749', '#EAB74B', '#EAB64D', '#EAB64F', '#EAB550', '#EAB552', '#EAB454', '#EAB456', '#EAB358', '#EAB35A', '#EAB35C', '#EBB25D', '#EBB25F', '#EBB261', '#EBB263', '#EBB165', '#EBB167', '#EBB169', '#EBB16B', '#EBB16C', '#EBB16E', '#ECB170', '#ECB172', '#ECB174', '#ECB176', '#ECB178', '#ECB17A', '#ECB17C', '#ECB17E', '#ECB27F', '#ECB281', '#EDB283', '#EDB285', '#EDB387', '#EDB389', '#EDB38B', '#EDB48D', '#EDB48F', '#EDB591', '#EDB593', '#EDB694', '#EEB696', '#EEB798', '#EEB89A', '#EEB89C', '#EEB99E', '#EEBAA0', '#EEBAA2', '#EEBBA4', '#EEBCA6', '#EEBDA8', '#EFBEAA', '#EFBEAC', '#EFBFAD', '#EFC0AF', '#EFC1B1', '#EFC2B3', '#EFC3B5', '#EFC4B7', '#EFC5B9', '#EFC7BB', '#F0C8BD', '#F0C9BF', '#F0CAC1', '#F0CBC3', '#F0CDC5', '#F0CEC7', '#F0CFC9', '#F0D1CB', '#F0D2CD', '#F0D3CF', '#F1D5D1', '#F1D6D3', '#F1D8D5', '#F1D9D7', '#F1DBD8', '#F1DDDA', '#F1DEDC', '#F1E0DE', '#F1E2E0', '#F1E3E2', '#F2E5E4', '#F2E7E6', '#F2E9E8', '#F2EBEA', '#F2ECEC', '#F2EEEE', '#F2F0F0', '#F2F2F2']
+  //       const colors = [
+  //         { min: 0, max: 0, color: '#D50637' },
+  //         { min: 0, max: 10, color: '#E70000' },
+  //         { min: 10, max: 20, color: '#FC2603' },
+  //         { min: 20, max: 30, color: '#F74F14' },
+  //         { min: 30, max: 40, color: '#F9FAD5' },
+  //         { min: 40, max: 50, color: '#EEFDCA' },
+  //         { min: 50, max: 60, color: '#4349C9' },
+  //         { min: 60, max: 70, color: '#5440B6' },
+  //         { min: 70, max: 80, color: '#4621A4' },
+  //         { min: 80, max: 90, color: '#330D80' },
+  //         { min: 90, max: 100, color: '#080000' }
+  //       ]
+  //       kriging.plot(canvas, grid, [97.3481, 108.5467], [26.0459, 34.3129], colors)
+  //     }
+  //
+  //     function returnImgae() {
+  //       const mycanvas = document.getElementById('canvasMap')
+  //       return mycanvas.toDataURL('image/png')
+  //     }
+  //
+  //     loadkriging()
+  //
+  //     const imageBounds = [[26.0459, 97.3481], [34.3129, 108.5467]]
+  //     L.imageOverlay(returnImgae(), imageBounds, { opacity: 0.6 }).addTo(map)
+  //   })
+  // }
 
   // 霜冻预警
   function frostWarning(time) {
@@ -1304,7 +1286,6 @@
               const hourRain = document.querySelector('.hour-rain')
               const dayTemp = document.querySelector('.day-temp')
               const dayRain = document.querySelector('.day-rain')
-              const forecast = document.querySelector('.forecast')
 
               function toHourTemp() {
                 window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}`
@@ -1322,16 +1303,10 @@
                 window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}`
               }
 
-              function toForecast() {
-                window.location.href = `http://localhost:9528/#/forecast/index?stationName=${stationName[i]}&lon=${x[i]}&lat=${y[i]}`
-              }
-
               hourTemp.addEventListener('click', toHourTemp)
               hourRain.addEventListener('click', toHourRain)
               dayTemp.addEventListener('click', toDayTemp)
               dayRain.addEventListener('click', toDayRain)
-              forecast.addEventListener('click', toForecast)
-
             }).on('mouseover', function(e) {
               e.target.options.className = 'icon-hover'
               this.bindPopup(popupContent).openPopup()
@@ -1451,7 +1426,7 @@
 
     axios.get('http://localhost:3000/weathers/kri-hour', { params: param }).then(res => {
       points = res.data.result
-      document.querySelector('.station-date').innerText = `2019年${param.month}月${param.day}日${param.hour}时`
+      document.querySelector('.station-date').innerText = `2020年6月10日22时`
 
       axios.post('http://localhost:3000/caiyun/frost', { points: points, time: time }).then(res => {
         console.log(res.data)
@@ -1525,8 +1500,6 @@
               const hourRain = document.querySelector('.hour-rain')
               const dayTemp = document.querySelector('.day-temp')
               const dayRain = document.querySelector('.day-rain')
-              const forecast = document.querySelector('.forecast')
-
               function toHourTemp() {
                 window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}`
               }
@@ -1543,16 +1516,10 @@
                 window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}`
               }
 
-              function toForecast() {
-                window.location.href = `http://localhost:9528/#/forecast/index?stationName=${stationName[i]}&lon=${x[i]}&lat=${y[i]}`
-              }
-
               hourTemp.addEventListener('click', toHourTemp)
               hourRain.addEventListener('click', toHourRain)
               dayTemp.addEventListener('click', toDayTemp)
               dayRain.addEventListener('click', toDayRain)
-              forecast.addEventListener('click', toForecast)
-
             }).on('mouseover', function(e) {
               e.target.options.className = 'icon-hover'
               this.bindPopup(`${stationName[i]}:${t[i]}&#8451`).openPopup()
@@ -1756,8 +1723,6 @@
               const hourRain = document.querySelector('.hour-rain')
               const dayTemp = document.querySelector('.day-temp')
               const dayRain = document.querySelector('.day-rain')
-              const forecast = document.querySelector('.forecast')
-
               function toHourTemp() {
                 window.location.href = `http://localhost:9528/#/station/hourtemp?stationName=${stationName[i]}`
               }
@@ -1774,16 +1739,10 @@
                 window.location.href = `http://localhost:9528/#/station/dayrain?stationName=${stationName[i]}`
               }
 
-              function toForecast() {
-                window.location.href = `http://localhost:9528/#/forecast/index?stationName=${stationName[i]}&lon=${x[i]}&lat=${y[i]}`
-              }
-
               hourTemp.addEventListener('click', toHourTemp)
               hourRain.addEventListener('click', toHourRain)
               dayTemp.addEventListener('click', toDayTemp)
               dayRain.addEventListener('click', toDayRain)
-              forecast.addEventListener('click', toForecast)
-
             }).on('mouseover', function(e) {
               e.target.options.className = 'icon-hover'
               this.bindPopup(`${stationName[i]}:${t[i]}&#8451`).openPopup()
@@ -1873,9 +1832,11 @@
   const tempBtn = document.querySelector('.temp-btn')
   const rainBtn = document.querySelector('.rain-btn')
   const humidityBtn = document.querySelector('.humidity-btn')
+  // const prsBtn = document.querySelector('.prs-btn')
   tempBtn.addEventListener('click', loadTemp)
   rainBtn.addEventListener('click', loadRain)
   humidityBtn.addEventListener('click', loadHumidity)
+  // prsBtn.addEventListener('click', loadPressure)
 
   // 切换预警
   const rain3 = document.querySelector('.rain3')

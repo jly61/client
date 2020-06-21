@@ -42,80 +42,44 @@ export const constantRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/2d',
-  //   component: Layout,
-  //   redirect: '/2d/temphour',
-  //   name: '2d',
-  //   meta: {
-  //     title: '二维插值',
-  //     icon: 'nested'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'temphour',
-  //       name: 'tempHour',
-  //       component: () => import('@/views/2d/temphour'),
-  //       meta: { title: '每小时气温', icon: 'form' }
-  //     },
-  //     {
-  //       path: 'rainhour',
-  //       name: 'tempRain',
-  //       component: () => import('@/views/2d/rainhour'),
-  //       meta: { title: '每小时降雨', icon: 'form' }
-  //     },
-  //     {
-  //       path: 'open',
-  //       name: 'openlayer',
-  //       component: () => import('@/views/2d/openlayer'),
-  //       meta: { title: 'openlayer', icon: 'form' }
-  //     },
-  //     {
-  //       path: 'esri',
-  //       name: 'esri',
-  //       component: () => import('@/views/2d/esri'),
-  //       meta: { title: 'esri', icon: 'form' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/3d',
-  //   component: Layout,
-  //   redirect: '/3d/hourtemp',
-  //   name: '3d',
-  //   meta: {
-  //     title: '区域三维可视化',
-  //     icon: 'nested'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'hourtemp',
-  //       component: () => import('@/views/3d/temphour'),
-  //       meta: { title: '每小时气温' }
-  //     },
-  //     {
-  //       path: 'daytemp',
-  //       component: () => import('@/views/3d/tempday'),
-  //       meta: { title: '日平均气温' }
-  //     },
-  //     {
-  //       path: 'hourrain',
-  //       component: () => import('@/views/3d/rainhour'),
-  //       meta: { title: '每小时降水' }
-  //     },
-  //     {
-  //       path: 'dayrain',
-  //       component: () => import('@/views/3d/rainday'),
-  //       meta: { title: '日总降雨量' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/3d',
+    component: Layout,
+    redirect: '/3d/hourtemp',
+    name: '3d',
+    meta: {
+      title: '气象三维可视化',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'hourtemp',
+        component: () => import('@/views/3d/temphour'),
+        meta: { title: '每小时气温' }
+      },
+      {
+        path: 'daytemp',
+        component: () => import('@/views/3d/tempday'),
+        meta: { title: '日平均气温' }
+      },
+      {
+        path: 'hourrain',
+        component: () => import('@/views/3d/rainhour'),
+        meta: { title: '每小时降水' }
+      },
+      {
+        path: 'dayrain',
+        component: () => import('@/views/3d/rainday'),
+        meta: { title: '日总降雨量' }
+      }
+    ]
+  },
   {
     path: '/station',
     component: Layout,
     name: 'Station',
     meta: {
-      title: '气象要素精细化',
+      title: '单站点气象时序图',
       icon: 'nested'
     },
     children: [
@@ -133,70 +97,16 @@ export const constantRoutes = [
         path: 'daytemp',
         component: () => import('@/views/station/daytemp'),
         meta: { title: '日平均气温' }
-      }, {
+      },
+      {
         path: 'dayrain',
         component: () => import('@/views/station/dayrain'),
         meta: { title: '日总降雨量' }
-      }
-    ]
-  },
-  {
-    path: '/forecast',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/forecast/index'),
-        name: 'forecast',
-        meta: { title: '农业特色预报', icon: 'form' }
-      }
-    ]
-  },
-  {
-    path: '/norm',
-    component: Layout,
-    name: 'norm',
-    meta: {
-      title: '农业气象指标库',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'service',
-        component: () => import('@/views/norm/service'),
-        name: 'service',
-        meta: { title: '农业气象服务指标', icon: 'form' }
       },
       {
-        path: 'disaster',
-        component: () => import('@/views/norm/disaster'),
-        name: 'disaster',
-        meta: { title: '气象灾害指标', icon: 'form' }
-      },
-    ]
-  },
-
-  {
-    path: '/map',
-    component: Layout,
-    redirect: '/map/tempday',
-    name: 'Map',
-    meta: {
-      title: '农业气象灾害',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'rain',
-        name: 'rain',
-        component: () => import('@/views/map/temp'),
-        meta: { title: '暴雨', icon: 'form' }
-      },
-      {
-        path: 'rainday',
-        name: 'rainday',
-        component: () => import('@/views/map/rain'),
-        meta: { title: '高温', icon: 'form' }
+        path: 'windyhour',
+        component: () => import('@/views/station/windyhour'),
+        meta: { title: '24小时风速' }
       }
     ]
   },
