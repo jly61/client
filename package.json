@@ -16,7 +16,7 @@
     },
     "dependencies": {
         "@sakitam-gis/kriging": "^0.1.0",
-        "axios": "0.18.1",
+        "axios": "1.6.0",
         "echarts": "^4.2.1",
         "echartslayer": "^0.1.6",
         "element-ui": "2.7.2",
